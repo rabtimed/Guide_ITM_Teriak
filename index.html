@@ -3,25 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>Guide ITM - Teriak</title>
 
-  <!-- Font Awesome -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-  />
+  <!-- Font Awesome (version stable) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-  <!-- Bibliothèques PDF -->
+  <!-- html2canvas + jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <style>
+    /* =========================================================
+       VARIABLES CSS
+    ========================================================= */
+    :root {
+      --color-primary: #0a2540;
+      --color-primary-light: #1a3a5a;
+      --color-accent: #00a8ff;
+      --color-accent-dark: #0077be;
+      --color-text: #2d4054;
+      --color-muted: #5a6d7e;
+      --color-border: #e2e8f0;
+      --color-background: #f4f7fc;
+      --color-surface: #ffffff;
+
+      --header-height: 26mm;
+      --footer-height: 27mm;
+      --page-padding-x: 11mm;
+      --page-padding-y: 28mm;
+
+      --font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    }
 
     /* =========================================================
-       RESET
+       RESET & BASE
     ========================================================= */
-
     * {
       margin: 0;
       padding: 0;
@@ -32,2174 +48,1191 @@
       scroll-behavior: smooth;
     }
 
-    body {
-      font-family: "Segoe UI", Roboto, Arial, sans-serif;
-      background: #f4f7fc;
-      color: #1a2a4a;
-
-      padding: 30px 20px 110px;
-
-      min-height: 100vh;
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
     }
 
+    body {
+      font-family: var(--font-family);
+      background: var(--color-background);
+      color: #1a2a4a;
+      padding: 30px 20px 110px;
+      min-height: 100vh;
+    }
 
     /* =========================================================
        BOUTON DE TÉLÉCHARGEMENT
     ========================================================= */
-
     .download-btn-wrapper {
       position: fixed;
-
       right: 30px;
       bottom: 30px;
-
       z-index: 99999;
     }
 
     .download-btn {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-
       gap: 12px;
-
       padding: 15px 28px;
-
       border: none;
       border-radius: 60px;
-
-      background: linear-gradient(
-        135deg,
-        #0a2540,
-        #0077be
-      );
-
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent-dark));
       color: #fff;
-
       font-family: inherit;
-
       font-size: 16px;
       font-weight: 700;
-
       cursor: pointer;
-
-      box-shadow:
-        0 10px 30px rgba(0, 119, 190, 0.35);
-
-      transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        opacity 0.2s ease;
+      box-shadow: 0 10px 30px rgba(0, 119, 190, 0.35);
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
     }
-
     .download-btn:hover {
       transform: translateY(-3px);
-
-      box-shadow:
-        0 15px 35px rgba(0, 119, 190, 0.45);
+      box-shadow: 0 15px 35px rgba(0, 119, 190, 0.45);
     }
-
     .download-btn:disabled {
       cursor: wait;
       opacity: 0.75;
       transform: none;
     }
-
     .download-btn i {
       font-size: 21px;
     }
-
+    .download-btn:focus-visible {
+      outline: 3px solid var(--color-accent);
+      outline-offset: 3px;
+    }
 
     /* =========================================================
-       CONTENEUR
+       DOCUMENT A4
     ========================================================= */
-
     #pdf-content {
       width: 210mm;
-
       max-width: 100%;
-
       margin: 0 auto;
     }
 
-
     /* =========================================================
-       PAGE A4
+       PAGE
     ========================================================= */
-
     .page {
       position: relative;
-
       width: 210mm;
       height: 297mm;
-
       max-width: 100%;
-
       margin: 0 auto 30px;
-
-      background: #fff;
-
+      background: var(--color-surface);
       overflow: hidden;
-
-      box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.12);
-
-      /*
-        IMPORTANT :
-        espace réservé au header fixe
-        et au footer fixe
-      */
-
-      padding-top: 31mm;
-      padding-bottom: 31mm;
-      padding-left: 13mm;
-      padding-right: 13mm;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      padding: var(--page-padding-y) var(--page-padding-x);
     }
-
 
     /* =========================================================
        HEADER FIXE
     ========================================================= */
-
     .header-pdf {
       position: absolute;
-
       top: 0;
       left: 0;
       right: 0;
-
-      height: 27mm;
-
-      padding:
-        5mm
-        13mm
-        3mm
-        13mm;
-
-      background: #fff;
-
-      border-bottom: 3px solid #0a2540;
-
+      height: var(--header-height);
+      padding: 4mm var(--page-padding-x) 2mm var(--page-padding-x);
+      background: var(--color-surface);
+      border-bottom: 3px solid var(--color-primary);
       display: flex;
-
       align-items: center;
-
-      gap: 15px;
-
+      gap: 12px;
       z-index: 20;
     }
-
     .header-pdf .logo {
       flex-shrink: 0;
     }
-
     .header-pdf .logo img {
       display: block;
-
       width: auto;
-
-      max-width: 110px;
-      max-height: 50px;
-
+      max-width: 100px;
+      max-height: 45px;
       object-fit: contain;
     }
-
     .title-group {
       flex: 1;
-
       min-width: 0;
     }
-
     .title-group h1 {
-      color: #0a2540;
-
-      font-size: 20px;
-
+      color: var(--color-primary);
+      font-size: 18px;
       line-height: 1.15;
-
       font-weight: 700;
-
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
-
     .title-group h1 i {
-      color: #00a8ff;
-
-      margin-right: 7px;
+      color: var(--color-accent);
+      margin-right: 6px;
     }
-
     .subtitle {
-      color: #5a6d7e;
-
-      font-size: 12px;
-
+      color: var(--color-muted);
+      font-size: 11px;
       line-height: 1.3;
-
       font-weight: 500;
     }
-
     .subtitle i {
-      color: #00a8ff;
-
+      color: var(--color-accent);
       margin-right: 4px;
     }
-
     .btn-header-pdf {
       flex-shrink: 0;
-
       display: inline-flex;
-
       align-items: center;
-
-      gap: 6px;
-
-      padding: 8px 15px;
-
+      gap: 5px;
+      padding: 6px 12px;
       border-radius: 50px;
-
-      border: 1.5px solid #00a8ff;
-
-      background: #0a2540;
-
+      border: 1.5px solid var(--color-accent);
+      background: var(--color-primary);
       color: #fff;
-
       text-decoration: none;
-
-      font-size: 11px;
-
+      font-size: 10px;
       font-weight: 600;
-
       white-space: nowrap;
     }
-
+    .btn-header-pdf i {
+      margin-right: 2px;
+    }
+    .btn-header-pdf:hover {
+      background: var(--color-accent-dark);
+      border-color: var(--color-accent-dark);
+    }
+    .btn-header-pdf:focus-visible {
+      outline: 3px solid var(--color-accent);
+      outline-offset: 3px;
+    }
 
     /* =========================================================
        CONTENU PRINCIPAL
     ========================================================= */
-
     .page-content {
       position: relative;
-
       width: 100%;
-
       height: 100%;
-
       overflow: hidden;
     }
-
 
     /* =========================================================
        RAPPEL
     ========================================================= */
-
     .reminder-box {
       background: #f0f6ff;
-
-      border-left: 5px solid #0a2540;
-
-      border-radius: 12px;
-
-      padding: 13px 17px;
-
-      margin-bottom: 13px;
+      border-left: 5px solid var(--color-primary);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
     }
-
     .reminder-box h2 {
-      color: #0a2540;
-
-      font-size: 16px;
-
+      color: var(--color-primary);
+      font-size: 14px;
       line-height: 1.25;
-
-      margin-bottom: 7px;
-    }
-
-    .reminder-box h2 i {
-      color: #00a8ff;
-
-      margin-right: 6px;
-    }
-
-    .reminder-box p {
-      color: #2d4054;
-
-      font-size: 11.5px;
-
-      line-height: 1.5;
-
       margin-bottom: 5px;
     }
-
+    .reminder-box h2 i {
+      color: var(--color-accent);
+      margin-right: 5px;
+    }
+    .reminder-box p {
+      color: var(--color-text);
+      font-size: 10.5px;
+      line-height: 1.45;
+      margin-bottom: 4px;
+    }
     .reminder-box ul {
-      margin: 5px 0;
-
+      margin: 4px 0;
       padding-left: 0;
     }
-
     .reminder-box li {
       list-style: none;
-
       position: relative;
-
-      padding-left: 19px;
-
-      margin-bottom: 3px;
-
-      color: #2d4054;
-
-      font-size: 11px;
-
-      line-height: 1.45;
+      padding-left: 17px;
+      margin-bottom: 2px;
+      color: var(--color-text);
+      font-size: 10px;
+      line-height: 1.4;
     }
-
     .reminder-box li::before {
       content: "•";
-
       position: absolute;
-
       left: 2px;
-
-      color: #00a8ff;
-
+      color: var(--color-accent);
       font-weight: 700;
     }
-
     .date-highlight {
       display: inline-block;
-
-      background: #0a2540;
-
+      background: var(--color-primary);
       color: #fff;
-
       border-radius: 30px;
-
-      padding: 2px 10px;
-
-      font-size: 10.5px;
-
+      padding: 1px 9px;
+      font-size: 9.5px;
       font-weight: 700;
-
       margin-right: 3px;
     }
-
+    .date-highlight i {
+      margin-right: 3px;
+    }
 
     /* =========================================================
        ÉTAPES
     ========================================================= */
-
     .step {
       display: flex;
-
-      gap: 15px;
-
+      gap: 12px;
       width: 100%;
-
-      margin-bottom: 13px;
-
-      padding: 12px 15px;
-
+      margin-bottom: 10px;
+      padding: 10px 13px;
       background: #fafcff;
-
       border: 1px solid #e3e9f1;
-
-      border-radius: 12px;
-
+      border-radius: 10px;
       page-break-inside: avoid;
     }
-
     .step-number {
       flex-shrink: 0;
-
-      width: 39px;
-      height: 39px;
-
+      width: 34px;
+      height: 34px;
       display: flex;
-
       align-items: center;
       justify-content: center;
-
-      border-radius: 12px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #0a2540,
-          #1a3a5a
-        );
-
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
       color: #fff;
-
-      font-size: 18px;
-
+      font-size: 16px;
       font-weight: 700;
-
-      box-shadow:
-        0 4px 9px rgba(10, 37, 64, 0.2);
+      box-shadow: 0 3px 8px rgba(10, 37, 64, 0.2);
     }
-
     .step-content {
       flex: 1;
-
       min-width: 0;
     }
-
     .step-content h3 {
-      color: #0a2540;
-
-      font-size: 14px;
-
+      color: var(--color-primary);
+      font-size: 12.5px;
       line-height: 1.3;
-
-      margin-bottom: 5px;
+      margin-bottom: 3px;
     }
-
     .step-content h3 i {
-      color: #00a8ff;
-
-      margin-right: 6px;
+      color: var(--color-accent);
+      margin-right: 5px;
     }
-
     .step-content p {
-      color: #2d4054;
-
-      font-size: 11px;
-
-      line-height: 1.5;
-
-      margin-bottom: 4px;
+      color: var(--color-text);
+      font-size: 10px;
+      line-height: 1.45;
+      margin-bottom: 3px;
     }
-
     .step-content ul {
       padding-left: 0;
-
-      margin: 4px 0;
+      margin: 3px 0;
     }
-
     .step-content li {
       position: relative;
-
       list-style: none;
-
-      padding-left: 17px;
-
-      margin-bottom: 4px;
-
-      color: #2d4054;
-
-      font-size: 11px;
-
-      line-height: 1.45;
+      padding-left: 15px;
+      margin-bottom: 3px;
+      color: var(--color-text);
+      font-size: 10px;
+      line-height: 1.4;
     }
-
     .step-content li::before {
       content: "▸";
-
       position: absolute;
-
       left: 0;
-
-      color: #00a8ff;
-
+      color: var(--color-accent);
       font-weight: 700;
     }
-
 
     /* =========================================================
        URL
     ========================================================= */
-
     .url-highlight {
       display: inline-block;
-
       max-width: 100%;
-
-      padding: 3px 10px;
-
-      margin-top: 3px;
-
+      padding: 2px 8px;
+      margin-top: 2px;
       border: 1px dashed #b0c4de;
-
       border-radius: 30px;
-
       background: #eef2f6;
-
-      color: #0a2540;
-
+      color: var(--color-primary);
       font-family: "Courier New", monospace;
-
-      font-size: 10px;
-
+      font-size: 9px;
       word-break: break-all;
+      text-decoration: none;
     }
-
     .url-highlight i {
-      color: #00a8ff;
-
-      margin-right: 4px;
+      color: var(--color-accent);
+      margin-right: 3px;
     }
-
+    .url-highlight:hover {
+      background: #dce4ef;
+    }
 
     /* =========================================================
-       IMAGES
+       IMAGES (agrandies)
     ========================================================= */
-
     .screenshot-box {
       width: 100%;
-
-      margin-top: 8px;
-
-      padding: 8px;
-
+      margin-top: 6px;
+      padding: 6px;
       background: #f0f4fa;
-
       border: 1px solid #d4deea;
-
-      border-radius: 10px;
-
+      border-radius: 8px;
       text-align: center;
-
       overflow: hidden;
     }
-
     .screenshot-box img {
       display: block;
-
       width: auto;
-
-      max-width: 100%;
-
-      /*
-        Images beaucoup plus grandes
-      */
-
-      max-height: 125px;
-
+      max-width: 95%;
+      max-height: 180px;  /* ← Augmenté de 125px à 180px */
       height: auto;
-
       margin: 0 auto;
-
       object-fit: contain;
-
       border: 1px solid #cbd7e5;
-
-      border-radius: 6px;
-
-      /*
-        Améliore la netteté du rendu
-      */
-
+      border-radius: 5px;
       image-rendering: auto;
     }
-
     .screenshot-box .caption {
-      margin-top: 5px;
-
+      margin-top: 4px;
       color: #5f7185;
-
-      font-size: 9px;
-
+      font-size: 8.5px;
       line-height: 1.3;
-
       font-weight: 600;
     }
-
+    .screenshot-box .caption i {
+      margin-right: 3px;
+    }
 
     /* =========================================================
        TABLEAU COMPARATIF
     ========================================================= */
-
     .comparison-table {
       display: grid;
-
       grid-template-columns: 1fr 1fr;
-
-      gap: 9px;
-
-      margin: 7px 0 8px;
+      gap: 7px;
+      margin: 5px 0 6px;
     }
-
     .card-option {
-      padding: 9px 11px;
-
-      border: 2px solid #e2e8f0;
-
-      border-radius: 10px;
-
-      background: #fff;
+      padding: 7px 9px;
+      border: 2px solid var(--color-border);
+      border-radius: 8px;
+      background: var(--color-surface);
     }
-
-    .card-option.blue {
-      border-color: #00a8ff;
-
+    .card-option--immediate {
+      border-color: var(--color-accent);
       background: #f5fbff;
     }
-
-    .card-option.orange {
+    .card-option--approval {
       border-color: #ff9f43;
-
       background: #fffaf5;
     }
-
     .card-option .tag {
-      font-size: 10px;
-
+      font-size: 9.5px;
       line-height: 1.3;
-
       font-weight: 700;
-
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
-
-    .card-option.blue .tag {
-      color: #0077be;
+    .card-option--immediate .tag {
+      color: var(--color-accent-dark);
     }
-
-    .card-option.orange .tag {
+    .card-option--approval .tag {
       color: #b45f06;
     }
-
     .card-option .tag i {
-      margin-right: 4px;
+      margin-right: 3px;
     }
-
-    .card-option div {
-      color: #2d4054;
-
-      font-size: 9.5px;
-
-      line-height: 1.4;
-
+    .card-option .description {
+      color: var(--color-text);
+      font-size: 9px;
+      line-height: 1.35;
       margin: 2px 0;
     }
-
+    .card-option .title {
+      color: var(--color-primary);
+      font-weight: 600;
+      font-size: 10px;
+    }
     .badge {
       display: inline-block;
-
-      margin-top: 5px;
-
-      padding: 2px 8px;
-
+      margin-top: 4px;
+      padding: 1px 7px;
       border-radius: 50px;
-
-      font-size: 8px;
-
+      font-size: 7.5px;
       font-weight: 600;
     }
-
-    .badge.green {
+    .badge--success {
       color: #155724;
-
       background: #d4edda;
     }
-
-    .badge.red {
+    .badge--warning {
       color: #721c24;
-
       background: #f8d7da;
     }
-
+    .badge i {
+      margin-right: 2px;
+    }
 
     /* =========================================================
        CAS PARTICULIER
     ========================================================= */
-
     .alert-box {
-      padding: 10px 13px;
-
-      margin: 10px 0;
-
+      padding: 8px 11px;
+      margin: 8px 0;
       border-left: 5px solid #f1c40f;
-
-      border-radius: 10px;
-
+      border-radius: 8px;
       background: #fff8e5;
     }
-
     .alert-box h4 {
       color: #8a6d00;
-
-      font-size: 12px;
-
+      font-size: 11px;
       line-height: 1.3;
-
-      margin-bottom: 5px;
+      margin-bottom: 4px;
     }
-
     .alert-box h4 i {
       color: #f1c40f;
-
-      margin-right: 5px;
+      margin-right: 4px;
     }
-
     .alert-box p {
       position: relative;
-
-      padding-left: 17px;
-
-      margin-bottom: 3px;
-
+      padding-left: 15px;
+      margin-bottom: 2px;
       color: #5a4a1a;
-
-      font-size: 10px;
-
-      line-height: 1.45;
+      font-size: 9.5px;
+      line-height: 1.4;
     }
-
     .alert-box p::before {
       content: "•";
-
       position: absolute;
-
       left: 0;
-
       color: #f1c40f;
-
       font-weight: 700;
     }
-
 
     /* =========================================================
        URGENCE
     ========================================================= */
-
     .phone-box {
       display: flex;
-
       align-items: flex-start;
-
-      gap: 11px;
-
-      padding: 10px 13px;
-
-      margin: 10px 0;
-
+      gap: 10px;
+      padding: 8px 11px;
+      margin: 8px 0;
       border: 1px solid #d0dae8;
-
-      border-radius: 10px;
-
+      border-radius: 8px;
       background: #f0f4fa;
     }
-
     .phone-box > i {
       flex-shrink: 0;
-
       margin-top: 2px;
-
-      color: #0a2540;
-
-      font-size: 21px;
+      color: var(--color-primary);
+      font-size: 18px;
     }
-
     .phone-box strong {
       display: block;
-
-      color: #0a2540;
-
-      font-size: 11px;
-
+      color: var(--color-primary);
+      font-size: 10px;
       line-height: 1.3;
-
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
-
     .phone-box span {
       display: block;
-
       position: relative;
-
-      padding-left: 17px;
-
-      margin-bottom: 3px;
-
+      padding-left: 15px;
+      margin-bottom: 2px;
       color: #3a5068;
-
-      font-size: 10px;
-
-      line-height: 1.45;
+      font-size: 9.5px;
+      line-height: 1.4;
     }
-
     .phone-box span::before {
       content: "•";
-
       position: absolute;
-
       left: 0;
-
-      color: #00a8ff;
-
+      color: var(--color-accent);
       font-weight: 700;
     }
-
 
     /* =========================================================
        REMERCIEMENT
     ========================================================= */
-
     .thank-you {
-      padding: 11px 14px;
-
-      margin-top: 10px;
-
-      border-radius: 10px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #0a2540,
-          #0077be
-        );
-
+      padding: 9px 12px;
+      margin-top: 8px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent-dark));
       color: white;
-
       text-align: center;
     }
-
     .thank-you h3 {
-      font-size: 13px;
-
-      margin-bottom: 3px;
+      font-size: 11.5px;
+      margin-bottom: 2px;
     }
-
     .thank-you p {
-      font-size: 9.5px;
-
-      line-height: 1.4;
-
+      font-size: 9px;
+      line-height: 1.35;
       opacity: 0.95;
     }
-
+    .thank-you i {
+      margin-right: 4px;
+    }
 
     /* =========================================================
        FOOTER FIXE
     ========================================================= */
-
     .footer-pdf {
       position: absolute;
-
       left: 0;
       right: 0;
       bottom: 0;
-
-      height: 28mm;
-
-      padding:
-        3mm
-        13mm
-        3mm
-        13mm;
-
-      background: #fff;
-
-      border-top: 2px solid #e2e8f0;
-
+      height: var(--footer-height);
+      padding: 2mm var(--page-padding-x) 2mm var(--page-padding-x);
+      background: var(--color-surface);
+      border-top: 2px solid var(--color-border);
       display: grid;
-
-      grid-template-columns:
-        1fr
-        1.35fr
-        1fr;
-
+      grid-template-columns: 1fr 1.35fr 1fr;
       align-items: center;
-
-      gap: 12px;
-
+      gap: 10px;
       z-index: 20;
-
       color: #3a5068;
-
-      font-size: 8.5px;
-
-      line-height: 1.35;
+      font-size: 8px;
+      line-height: 1.3;
     }
-
     .footer-pdf .left,
     .footer-pdf .right {
       min-width: 0;
     }
-
     .footer-pdf strong {
-      color: #0a2540;
-
+      color: var(--color-primary);
       font-weight: 700;
     }
-
     .footer-pdf i {
-      width: 14px;
-
+      width: 13px;
       text-align: center;
-
-      color: #00a8ff;
-
+      color: var(--color-accent);
       margin-right: 2px;
     }
-
     .footer-pdf .center {
       text-align: center;
-
       color: #6a7f96;
     }
-
     .footer-pdf .center img {
       display: block;
-
       width: auto;
-
-      max-width: 90px;
-
-      max-height: 25px;
-
-      margin: 0 auto 3px;
+      max-width: 80px;
+      max-height: 22px;
+      margin: 0 auto 2px;
+    }
+    .footer-pdf .page-meta {
+      font-size: 7px;
+      color: #8a9fb0;
+      margin-top: 2px;
     }
 
+    /* =========================================================
+       MODE PDF (activé avant capture)
+    ========================================================= */
+    .pdf-mode .page {
+      width: 210mm !important;
+      height: 297mm !important;
+      margin: 0 !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+    }
+    .pdf-mode body {
+      padding: 0 !important;
+      background: white !important;
+    }
+    .pdf-mode .download-btn-wrapper {
+      display: none !important;
+    }
 
     /* =========================================================
        RESPONSIVE TABLETTE
     ========================================================= */
-
     @media (max-width: 900px) {
-
       body {
         padding: 15px 10px 100px;
       }
-
       #pdf-content {
         width: 100%;
       }
-
       .page {
         width: 100%;
-
         height: auto;
-
         min-height: 297mm;
-
         margin-bottom: 20px;
-
-        padding-top: 105px;
-        padding-bottom: 125px;
-
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-top: 100px;
+        padding-bottom: 120px;
+        padding-left: 18px;
+        padding-right: 18px;
       }
-
       .header-pdf {
         height: auto;
-
-        min-height: 90px;
-
-        padding:
-          12px
-          20px
-          10px;
+        min-height: 80px;
+        padding: 10px 18px;
       }
-
       .footer-pdf {
         height: auto;
-
-        min-height: 100px;
-
-        padding:
-          10px
-          20px;
-
+        min-height: 95px;
+        padding: 8px 18px;
         grid-template-columns: 1fr;
-
         text-align: center;
       }
-
       .footer-pdf .center {
         order: -1;
       }
-
       .comparison-table {
         grid-template-columns: 1fr;
       }
-
       .screenshot-box img {
-        max-height: 300px;
-
+        max-height: 280px;
         max-width: 95%;
       }
     }
 
-
     /* =========================================================
        RESPONSIVE MOBILE
     ========================================================= */
-
     @media (max-width: 600px) {
-
       body {
-        padding:
-          10px
-          8px
-          90px;
+        padding: 10px 8px 90px;
       }
-
       .page {
-        padding-left: 14px;
-        padding-right: 14px;
-
-        padding-top: 105px;
-        padding-bottom: 190px;
-
+        padding-left: 12px;
+        padding-right: 12px;
+        padding-top: 100px;
+        padding-bottom: 180px;
         min-height: auto;
-
         overflow: visible;
       }
-
       .header-pdf {
         flex-wrap: wrap;
-
-        gap: 8px;
-
-        padding:
-          10px
-          14px;
+        gap: 6px;
+        padding: 8px 12px;
       }
-
       .header-pdf .logo img {
-        max-width: 75px;
-
-        max-height: 38px;
+        max-width: 65px;
+        max-height: 32px;
       }
-
       .title-group h1 {
-        font-size: 16px;
+        font-size: 15px;
       }
-
       .subtitle {
-        font-size: 10px;
+        font-size: 9px;
       }
-
       .btn-header-pdf {
         width: 100%;
-
         justify-content: center;
-
-        padding: 7px 10px;
-
-        font-size: 10px;
+        padding: 5px 8px;
+        font-size: 9px;
       }
-
       .reminder-box {
-        padding: 11px 12px;
+        padding: 9px 10px;
       }
-
       .reminder-box h2 {
-        font-size: 14px;
-      }
-
-      .reminder-box p,
-      .reminder-box li {
-        font-size: 11px;
-      }
-
-      .step {
-        gap: 10px;
-
-        padding: 11px;
-
-        flex-direction: column;
-      }
-
-      .step-number {
-        width: 34px;
-        height: 34px;
-
-        font-size: 15px;
-
-        border-radius: 10px;
-      }
-
-      .step-content h3 {
         font-size: 13px;
       }
-
+      .reminder-box p,
+      .reminder-box li {
+        font-size: 10px;
+      }
+      .step {
+        gap: 8px;
+        padding: 9px 10px;
+        flex-direction: column;
+      }
+      .step-number {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+        border-radius: 8px;
+      }
+      .step-content h3 {
+        font-size: 12px;
+      }
       .step-content p,
       .step-content li {
-        font-size: 11px;
+        font-size: 10px;
       }
-
       .screenshot-box {
-        padding: 6px;
+        padding: 5px;
       }
-
       .screenshot-box img {
         max-width: 100%;
-
         max-height: none;
-
         width: auto;
       }
-
       .footer-pdf {
         position: absolute;
-
-        min-height: 175px;
-
+        min-height: 165px;
         height: auto;
-
         grid-template-columns: 1fr;
-
-        gap: 7px;
-
-        font-size: 8px;
-
-        padding:
-          9px
-          14px;
+        gap: 5px;
+        font-size: 7.5px;
+        padding: 7px 12px;
       }
-
       .footer-pdf .center {
         order: -1;
       }
-
       .download-btn-wrapper {
         left: 10px;
-
         right: 10px;
-
         bottom: 10px;
       }
-
       .download-btn {
         width: 100%;
-
-        font-size: 15px;
-
-        padding: 13px 18px;
+        font-size: 14px;
+        padding: 12px 16px;
       }
     }
 
-
     /* =========================================================
-       PRINT
+       IMPRESSION (fallback)
     ========================================================= */
-
     @media print {
-
       @page {
         size: A4 portrait;
-
         margin: 0;
       }
-
       body {
         padding: 0;
-
         background: white;
       }
-
       #pdf-content {
         width: 210mm;
       }
-
       .page {
         margin: 0;
-
         width: 210mm;
         height: 297mm;
-
         box-shadow: none;
-
         page-break-after: always;
-
         break-after: page;
       }
-
       .page:last-child {
         page-break-after: avoid;
-
         break-after: avoid;
       }
-
       .download-btn-wrapper {
-        display: none;
+        display: none !important;
       }
     }
-
   </style>
 </head>
 
-
 <body>
-
-
   <!-- =========================================================
-       BOUTON TÉLÉCHARGEMENT
+       BOUTON DE TÉLÉCHARGEMENT
   ========================================================= -->
-
   <div class="download-btn-wrapper">
-
-    <button
-      id="downloadPdfBtn"
-      class="download-btn"
-      type="button"
-    >
-
-      <i class="fas fa-file-pdf"></i>
-
-      <span>
-        Télécharger le guide (PDF)
-      </span>
-
+    <button id="downloadPdfBtn" class="download-btn" type="button" aria-label="Télécharger le guide au format PDF">
+      <i class="fas fa-file-pdf" aria-hidden="true"></i>
+      <span>Télécharger le guide (PDF)</span>
     </button>
-
   </div>
 
+  <!-- =========================================================
+       ZONE DE STATUT (accessibilité)
+  ========================================================= -->
+  <div id="pdfStatus" role="status" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);"></div>
 
   <!-- =========================================================
        DOCUMENT
   ========================================================= -->
-
   <main id="pdf-content">
 
-
-    <!-- =======================================================
+    <!-- ========================================================
          PAGE 1
     ======================================================== -->
-
-    <section class="page">
+    <section class="page" aria-label="Page 1 du guide">
 
       <!-- HEADER -->
-
       <header class="header-pdf">
-
         <div class="logo">
-
-          <img
-            src="logo.png"
-            alt="Logo TERIAK"
-          />
-
+          <img src="logo.png" alt="Logo TERIAK" />
         </div>
-
         <div class="title-group">
-
-          <h1>
-            <i class="fas fa-ticket-alt"></i>
-            Guide ITM
-          </h1>
-
+          <h1><i class="fas fa-ticket-alt" aria-hidden="true"></i> Guide ITM</h1>
           <div class="subtitle">
-
-            <i class="fas fa-chevron-right"></i>
-
+            <i class="fas fa-chevron-right" aria-hidden="true"></i>
             Créer un ticket en 4 étapes
-
           </div>
-
         </div>
-
-        <a
-          href="https://e-kilanigroupe.com/TERIAK/E_TERIAK/"
-          target="_blank"
-          class="btn-header-pdf"
-        >
-
-          <i class="fas fa-external-link-alt"></i>
-
-          Accès rapide
-
+        <a href="https://e-kilanigroupe.com/TERIAK/E_TERIAK/" target="_blank" rel="noopener noreferrer" class="btn-header-pdf">
+          <i class="fas fa-external-link-alt" aria-hidden="true"></i> Accès rapide
         </a>
-
       </header>
 
-
       <!-- CONTENU -->
-
       <div class="page-content">
 
-
         <!-- RAPPEL -->
-
         <div class="reminder-box">
-
-          <h2>
-            <i class="fas fa-bullhorn"></i>
-            Rappel de la procédure
-          </h2>
-
+          <h2><i class="fas fa-bullhorn" aria-hidden="true"></i> Rappel de la procédure</h2>
           <p>
             Afin d'améliorer le suivi, la réactivité et la qualité
             de notre support informatique, nous vous rappelons que :
           </p>
-
           <p>
-
             <span class="date-highlight">
-              <i class="fas fa-calendar-alt"></i>
+              <i class="fas fa-calendar-alt" aria-hidden="true"></i>
               À compter du <strong>mercredi 09/09/2026</strong>
             </span>
-
             toute demande d'assistance informatique devra
             obligatoirement faire l'objet d'un ticket dans
             <strong>ITM</strong>.
-
           </p>
-
-          <p>
-            <strong>Pourquoi utiliser ITM ?</strong>
-          </p>
-
+          <p><strong>Pourquoi utiliser ITM ?</strong></p>
           <ul>
-
-            <li>
-              <strong>Traçabilité</strong> :
-              chaque demande et chaque intervention sont
-              enregistrées et suivies.
-            </li>
-
-            <li>
-              <strong>Priorisation</strong> :
-              les tickets permettent d'identifier les demandes urgentes.
-            </li>
-
-            <li>
-              <strong>Suivi des interventions</strong> :
-              l'historique conserve une vision claire des actions réalisées.
-            </li>
-
-            <li>
-              <strong>Gestion des ressources</strong> :
-              évaluation de la charge de travail et adaptation des ressources.
-            </li>
-
+            <li><strong>Traçabilité</strong> : chaque demande et chaque intervention sont enregistrées et suivies.</li>
+            <li><strong>Priorisation</strong> : les tickets permettent d'identifier les demandes urgentes.</li>
+            <li><strong>Suivi des interventions</strong> : l'historique conserve une vision claire des actions réalisées.</li>
+            <li><strong>Gestion des ressources</strong> : évaluation de la charge de travail et adaptation des ressources.</li>
           </ul>
-
           <p>
-
-            <i
-              class="fas fa-arrow-right"
-              style="color:#00a8ff;"
-            ></i>
-
+            <i class="fas fa-arrow-right" style="color:var(--color-accent);" aria-hidden="true"></i>
             <strong>Comment faire ?</strong>
-
             Créez un ticket directement dans ITM.
             Une procédure détaillée vous est proposée ci-dessous.
-
           </p>
-
         </div>
-
 
         <!-- ÉTAPE 1 -->
-
         <div class="step">
-
-          <div class="step-number">
-            1
-          </div>
-
+          <div class="step-number" aria-hidden="true">1</div>
           <div class="step-content">
-
-            <h3>
-              <i class="fas fa-sign-in-alt"></i>
-              Accéder à My Space
-            </h3>
-
+            <h3><i class="fas fa-sign-in-alt" aria-hidden="true"></i> Accéder à My Space</h3>
             <p>
-
               Connectez-vous à votre portail interne
               <strong>My Space</strong>
-              avec votre
-              <strong>Login (Matricule)</strong>
+              avec votre <strong>Login (Matricule)</strong>
               et votre mot de passe.
-
             </p>
-
-            <span class="url-highlight">
-
-              <i class="fas fa-globe"></i>
-
+            <a href="https://e-kilanigroupe.com/TERIAK/E_TERIAK/" target="_blank" rel="noopener noreferrer" class="url-highlight">
+              <i class="fas fa-globe" aria-hidden="true"></i>
               e-kilanigroupe.com/TERIAK/E_TERIAK/
-
-            </span>
-
+            </a>
             <div class="screenshot-box">
-
-              <img
-                src="1.png"
-                alt="Écran de connexion My Space"
-              />
-
-              <div class="caption">
-                📸 Écran de connexion – My Space
-              </div>
-
+              <img src="1.png" alt="Écran de connexion My Space" />
+              <div class="caption"><i class="fas fa-camera" aria-hidden="true"></i> Écran de connexion – My Space</div>
             </div>
-
           </div>
-
         </div>
-
 
         <!-- ÉTAPE 2 -->
-
         <div class="step">
-
-          <div class="step-number">
-            2
-          </div>
-
+          <div class="step-number" aria-hidden="true">2</div>
           <div class="step-content">
-
-            <h3>
-              <i class="fas fa-th-large"></i>
-              Ouvrir ITM depuis le tableau de bord
-            </h3>
-
+            <h3><i class="fas fa-th-large" aria-hidden="true"></i> Ouvrir ITM depuis le tableau de bord</h3>
             <p>
-
-              Dans <strong>My Space</strong>,
-              rendez-vous dans la rubrique
-              <strong>Support</strong>,
-              puis cliquez sur le bouton
+              Dans <strong>My Space</strong>, rendez-vous dans la rubrique
+              <strong>Support</strong>, puis cliquez sur le bouton
               <strong>ITM</strong>.
-
             </p>
-
             <div class="screenshot-box">
-
-              <img
-                src="2.png"
-                alt="Tableau de bord My Space"
-              />
-
-              <div class="caption">
-                📸 Tableau de bord – Rubrique Support
-              </div>
-
+              <img src="2.png" alt="Tableau de bord My Space" />
+              <div class="caption"><i class="fas fa-camera" aria-hidden="true"></i> Tableau de bord – Rubrique Support</div>
             </div>
-
           </div>
-
         </div>
-
 
       </div>
 
-
       <!-- FOOTER -->
-
       <footer class="footer-pdf">
-
         <div class="left">
-
-          <strong>
-            <i class="fas fa-user-tie"></i>
-            Walid Ben Youssef
-          </strong>
-
-          <br />
-
-          <i class="fas fa-briefcase"></i>
-          Responsable Système d’Information TERIAK
-
-          <br />
-
-          <i class="fas fa-envelope"></i>
-          walid.benyoussef@teriak.com
-
-          <br />
-
-          <i class="fas fa-phone"></i>
-          Poste 266 –
-          <i class="fas fa-mobile-alt"></i>
-          +216 92 291 953
-
+          <strong><i class="fas fa-user-tie" aria-hidden="true"></i> Walid Ben Youssef</strong><br />
+          <i class="fas fa-briefcase" aria-hidden="true"></i> Responsable Système d’Information TERIAK<br />
+          <i class="fas fa-envelope" aria-hidden="true"></i> walid.benyoussef@teriak.com<br />
+          <i class="fas fa-phone" aria-hidden="true"></i> Poste 266 – <i class="fas fa-mobile-alt" aria-hidden="true"></i> +216 92 291 953
         </div>
-
-
         <div class="center">
-
-          <img
-            src="logo.png"
-            alt="TERIAK"
-          />
-
-          <div>
-            Laboratoires TERIAK SA –
-            1111, ZI Jbel Ouest Zaghouan
-          </div>
-
-          <strong>
-            <i class="fas fa-check-circle"></i>
-            Support IT – Merci de votre collaboration
-          </strong>
-
+          <img src="logo.png" alt="TERIAK" />
+          <div>Laboratoires TERIAK SA – 1111, ZI Jbel Ouest Zaghouan</div>
+          <strong><i class="fas fa-check-circle" aria-hidden="true"></i> Support IT – Merci de votre collaboration</strong>
+          <div class="page-meta">Page 1 / 2 • Version 1.0 — Septembre 2026</div>
         </div>
-
-
         <div class="right">
-
-          <strong>
-            <i class="fas fa-user-tie"></i>
-            Mohamed Rabti
-          </strong>
-
-          <br />
-
-          <i class="fas fa-tools"></i>
-          Technicien HelpDesk
-
-          <br />
-
-          <i class="fas fa-envelope"></i>
-          mohamed.rabti@teriak.com
-
-          <br />
-
-          <i class="fas fa-phone"></i>
-          Poste 264 –
-          <i class="fas fa-mobile-alt"></i>
-          +216 92 363 898
-
+          <strong><i class="fas fa-user-tie" aria-hidden="true"></i> Mohamed Rabti</strong><br />
+          <i class="fas fa-tools" aria-hidden="true"></i> Technicien HelpDesk<br />
+          <i class="fas fa-envelope" aria-hidden="true"></i> mohamed.rabti@teriak.com<br />
+          <i class="fas fa-phone" aria-hidden="true"></i> Poste 264 – <i class="fas fa-mobile-alt" aria-hidden="true"></i> +216 92 363 898
         </div>
-
       </footer>
 
     </section>
 
-
-    <!-- =======================================================
+    <!-- ========================================================
          PAGE 2
     ======================================================== -->
-
-    <section class="page">
+    <section class="page" aria-label="Page 2 du guide">
 
       <!-- HEADER -->
-
       <header class="header-pdf">
-
         <div class="logo">
-
-          <img
-            src="logo.png"
-            alt="Logo TERIAK"
-          />
-
+          <img src="logo.png" alt="Logo TERIAK" />
         </div>
-
         <div class="title-group">
-
-          <h1>
-            <i class="fas fa-ticket-alt"></i>
-            Guide ITM
-          </h1>
-
+          <h1><i class="fas fa-ticket-alt" aria-hidden="true"></i> Guide ITM</h1>
           <div class="subtitle">
-
-            <i class="fas fa-chevron-right"></i>
-
+            <i class="fas fa-chevron-right" aria-hidden="true"></i>
             Créer un ticket en 4 étapes
-
           </div>
-
         </div>
-
-        <a
-          href="https://e-kilanigroupe.com/TERIAK/E_TERIAK/"
-          target="_blank"
-          class="btn-header-pdf"
-        >
-
-          <i class="fas fa-external-link-alt"></i>
-
-          Accès rapide
-
+        <a href="https://e-kilanigroupe.com/TERIAK/E_TERIAK/" target="_blank" rel="noopener noreferrer" class="btn-header-pdf">
+          <i class="fas fa-external-link-alt" aria-hidden="true"></i> Accès rapide
         </a>
-
       </header>
 
-
       <!-- CONTENU -->
-
       <div class="page-content">
 
-
         <!-- ÉTAPE 3 -->
-
         <div class="step">
-
-          <div class="step-number">
-            3
-          </div>
-
+          <div class="step-number" aria-hidden="true">3</div>
           <div class="step-content">
-
-            <h3>
-              <i class="fas fa-arrows-alt-h"></i>
-              Choisir le bon type de demande
-            </h3>
-
-            <p>
-              Sur la page d'accueil d'ITM,
-              sélectionnez l'option adaptée à votre besoin :
-            </p>
-
+            <h3><i class="fas fa-arrows-alt-h" aria-hidden="true"></i> Choisir le bon type de demande</h3>
+            <p>Sur la page d'accueil d'ITM, sélectionnez l'option adaptée à votre besoin :</p>
 
             <div class="comparison-table">
-
-              <div class="card-option blue">
-
-                <div class="tag">
-                  <i class="fas fa-wrench"></i>
-                  Intervention Sans Validation
-                </div>
-
-                <div style="font-weight:600;color:#0a2540;">
-                  Panne / Problème technique
-                </div>
-
-                <div>
-                  Ex : PC lent, réseau coupé, VPN, Email.
-                </div>
-
-                <span class="badge green">
-                  <i class="fas fa-check-circle"></i>
-                  Traité immédiatement
-                </span>
-
+              <div class="card-option card-option--immediate">
+                <div class="tag"><i class="fas fa-wrench" aria-hidden="true"></i> Intervention Sans Validation</div>
+                <div class="title">Panne / Problème technique</div>
+                <div class="description">Ex : PC lent, réseau coupé, VPN, Email.</div>
+                <span class="badge badge--success"><i class="fas fa-check-circle" aria-hidden="true"></i> Traité immédiatement</span>
               </div>
-
-
-              <div class="card-option orange">
-
-                <div class="tag">
-                  <i class="fas fa-user-check"></i>
-                  Demande Avec Validation
-                </div>
-
-                <div style="font-weight:600;color:#0a2540;">
-                  Achat / Accès / Autorisation
-                </div>
-
-                <div>
-                  Ex : Nouveau PC, accès Sage, logiciel.
-                </div>
-
-                <span class="badge red">
-                  <i class="fas fa-clock"></i>
-                  Validation direction requise
-                </span>
-
+              <div class="card-option card-option--approval">
+                <div class="tag"><i class="fas fa-user-check" aria-hidden="true"></i> Demande Avec Validation</div>
+                <div class="title">Achat / Accès / Autorisation</div>
+                <div class="description">Ex : Nouveau PC, accès Sage, logiciel.</div>
+                <span class="badge badge--warning"><i class="fas fa-clock" aria-hidden="true"></i> Validation direction requise</span>
               </div>
-
             </div>
-
 
             <div class="screenshot-box">
-
-              <img
-                src="3.png"
-                alt="Page d'accueil ITM"
-              />
-
-              <div class="caption">
-                📸 Page d'accueil ITM – Choix du type
-              </div>
-
+              <img src="3.png" alt="Page d'accueil ITM" />
+              <div class="caption"><i class="fas fa-camera" aria-hidden="true"></i> Page d'accueil ITM – Choix du type</div>
             </div>
-
           </div>
-
         </div>
-
 
         <!-- ÉTAPE 4 -->
-
         <div class="step">
-
-          <div class="step-number">
-            4
-          </div>
-
+          <div class="step-number" aria-hidden="true">4</div>
           <div class="step-content">
-
-            <h3>
-              <i class="fas fa-edit"></i>
-              Remplir les détails du ticket
-            </h3>
-
+            <h3><i class="fas fa-edit" aria-hidden="true"></i> Remplir les détails du ticket</h3>
             <ul>
-
-              <li>
-                Sélectionnez la <strong>catégorie</strong>
-                dans la liste
-                (ex : <em>Problème PC, Connexion VPN...</em>).
-              </li>
-
-              <li>
-                Rédigez une <strong>description précise</strong>
-                (message d'erreur, heure).
-              </li>
-
-              <li>
-                Joignez une <strong>capture d'écran</strong>
-                de l'erreur si possible.
-              </li>
-
+              <li>Sélectionnez la <strong>catégorie</strong> dans la liste (ex : <em>Problème PC, Connexion VPN...</em>).</li>
+              <li>Rédigez une <strong>description précise</strong> (message d'erreur, heure).</li>
+              <li>Joignez une <strong>capture d'écran</strong> de l'erreur si possible.</li>
             </ul>
-
-
             <div class="screenshot-box">
-
-              <img
-                src="4.png"
-                alt="Formulaire ITM"
-              />
-
-              <div class="caption">
-                📸 Formulaire ITM – Catégories & Description
-              </div>
-
+              <img src="4.png" alt="Formulaire ITM" />
+              <div class="caption"><i class="fas fa-camera" aria-hidden="true"></i> Formulaire ITM – Catégories & Description</div>
             </div>
-
           </div>
-
         </div>
-
 
         <!-- CAS PARTICULIER -->
-
         <div class="alert-box">
-
-          <h4>
-            <i class="fas fa-exclamation-triangle"></i>
-            Cas particulier : PC en panne ou réseau coupé
-          </h4>
-
-          <p>
-            Si vous n'avez <strong>plus d'accès</strong>
-            à votre poste, demandez à un <strong>collègue</strong>
-            d'ouvrir un ticket depuis sa session.
-          </p>
-
-          <p>
-            Il devra indiquer vos nom, prénom et matricule ainsi que
-            la nature du problème dans la description du ticket afin
-            que l'équipe IT puisse identifier correctement la demande.
-          </p>
-
+          <h4><i class="fas fa-exclamation-triangle" aria-hidden="true"></i> Cas particulier : PC en panne ou réseau coupé</h4>
+          <p>Si vous n'avez <strong>plus d'accès</strong> à votre poste, demandez à un <strong>collègue</strong> d'ouvrir un ticket depuis sa session.</p>
+          <p>Il devra indiquer vos nom, prénom et matricule ainsi que la nature du problème dans la description du ticket afin que l'équipe IT puisse identifier correctement la demande.</p>
         </div>
-
 
         <!-- URGENCE -->
-
         <div class="phone-box">
-
-          <i class="fas fa-phone-alt"></i>
-
+          <i class="fas fa-phone-alt" aria-hidden="true"></i>
           <div>
-
-            <strong>
-              📞 En cas d'urgence : contacter l'équipe IT
-            </strong>
-
-            <span>
-              Si vous avez un problème urgent et que vous ne pouvez
-              pas créer de ticket ITM, vous pouvez contacter l'équipe
-              IT par téléphone.
-            </span>
-
-            <span>
-              Dans ce cas, un ticket devra être créé dans ITM par la
-              suite, par vous-même ou avec l'aide de l'équipe IT.
-            </span>
-
+            <strong><i class="fas fa-phone" aria-hidden="true"></i> En cas d'urgence : contacter l'équipe IT</strong>
+            <span>Si vous avez un problème urgent et que vous ne pouvez pas créer de ticket ITM, vous pouvez contacter l'équipe IT par téléphone.</span>
+            <span>Dans ce cas, un ticket devra être créé dans ITM par la suite, par vous-même ou avec l'aide de l'équipe IT.</span>
           </div>
-
         </div>
-
 
         <!-- REMERCIEMENT -->
-
         <div class="thank-you">
-
-          <h3>
-            <i class="fas fa-check-circle"></i>
-            Merci de votre collaboration !
-          </h3>
-
-          <p>
-            Votre utilisation systématique d'ITM contribue à améliorer
-            le suivi, la réactivité et la qualité du support informatique.
-          </p>
-
+          <h3><i class="fas fa-check-circle" aria-hidden="true"></i> Merci de votre collaboration !</h3>
+          <p>Votre utilisation systématique d'ITM contribue à améliorer le suivi, la réactivité et la qualité du support informatique.</p>
         </div>
-
 
       </div>
 
-
       <!-- FOOTER -->
-
       <footer class="footer-pdf">
-
         <div class="left">
-
-          <strong>
-            <i class="fas fa-user-tie"></i>
-            Walid Ben Youssef
-          </strong>
-
-          <br />
-
-          <i class="fas fa-briefcase"></i>
-          Responsable Système d’Information TERIAK
-
-          <br />
-
-          <i class="fas fa-envelope"></i>
-          walid.benyoussef@teriak.com
-
-          <br />
-
-          <i class="fas fa-phone"></i>
-          Poste 266 –
-          <i class="fas fa-mobile-alt"></i>
-          +216 92 291 953
-
+          <strong><i class="fas fa-user-tie" aria-hidden="true"></i> Walid Ben Youssef</strong><br />
+          <i class="fas fa-briefcase" aria-hidden="true"></i> Responsable Système d’Information TERIAK<br />
+          <i class="fas fa-envelope" aria-hidden="true"></i> walid.benyoussef@teriak.com<br />
+          <i class="fas fa-phone" aria-hidden="true"></i> Poste 266 – <i class="fas fa-mobile-alt" aria-hidden="true"></i> +216 92 291 953
         </div>
-
-
         <div class="center">
-
-          <img
-            src="logo.png"
-            alt="TERIAK"
-          />
-
-          <div>
-            Laboratoires TERIAK SA –
-            1111, ZI Jbel Ouest Zaghouan
-          </div>
-
-          <strong>
-            <i class="fas fa-check-circle"></i>
-            Support IT – Merci de votre collaboration
-          </strong>
-
+          <img src="logo.png" alt="TERIAK" />
+          <div>Laboratoires TERIAK SA – 1111, ZI Jbel Ouest Zaghouan</div>
+          <strong><i class="fas fa-check-circle" aria-hidden="true"></i> Support IT – Merci de votre collaboration</strong>
+          <div class="page-meta">Page 2 / 2 • Version 1.0 — Septembre 2026</div>
         </div>
-
-
         <div class="right">
-
-          <strong>
-            <i class="fas fa-user-tie"></i>
-            Mohamed Rabti
-          </strong>
-
-          <br />
-
-          <i class="fas fa-tools"></i>
-          Technicien HelpDesk
-
-          <br />
-
-          <i class="fas fa-envelope"></i>
-          mohamed.rabti@teriak.com
-
-          <br />
-
-          <i class="fas fa-phone"></i>
-          Poste 264 –
-          <i class="fas fa-mobile-alt"></i>
-          +216 92 363 898
-
+          <strong><i class="fas fa-user-tie" aria-hidden="true"></i> Mohamed Rabti</strong><br />
+          <i class="fas fa-tools" aria-hidden="true"></i> Technicien HelpDesk<br />
+          <i class="fas fa-envelope" aria-hidden="true"></i> mohamed.rabti@teriak.com<br />
+          <i class="fas fa-phone" aria-hidden="true"></i> Poste 264 – <i class="fas fa-mobile-alt" aria-hidden="true"></i> +216 92 363 898
         </div>
-
       </footer>
 
     </section>
 
   </main>
 
-
   <!-- =========================================================
-       GÉNÉRATION PDF
+       SCRIPT DE GÉNÉRATION PDF
   ========================================================= -->
-
   <script>
+    (function() {
+      'use strict';
 
-    (function () {
+      const button = document.getElementById('downloadPdfBtn');
+      const pages = document.querySelectorAll('#pdf-content .page');
+      const statusEl = document.getElementById('pdfStatus');
 
-      "use strict";
-
-
-      const button =
-        document.getElementById("downloadPdfBtn");
-
-      const pages =
-        document.querySelectorAll("#pdf-content .page");
-
-
-      /* -------------------------------------------------------
-         Attendre le chargement des images
-      ------------------------------------------------------- */
-
-      function waitForImages() {
-
-        const images =
-          document.querySelectorAll("#pdf-content img");
-
-        return Promise.all(
-
-          Array.from(images).map(function (img) {
-
-            return new Promise(function (resolve) {
-
-              if (
-                img.complete &&
-                img.naturalWidth > 0
-              ) {
-
-                resolve();
-
-                return;
-              }
-
-              img.addEventListener(
-                "load",
-                resolve,
-                { once: true }
-              );
-
-              img.addEventListener(
-                "error",
-                resolve,
-                { once: true }
-              );
-
-            });
-
-          })
-
-        );
-
+      if (pages.length !== 2) {
+        console.warn('Le guide contient ' + pages.length + ' pages, mais 2 sont attendues.');
       }
 
+      function waitForImages() {
+        const images = document.querySelectorAll('#pdf-content img');
+        return Promise.all(
+          Array.from(images).map(function(img) {
+            return new Promise(function(resolve) {
+              if (img.complete && img.naturalWidth > 0) {
+                resolve();
+                return;
+              }
+              img.addEventListener('load', resolve, { once: true });
+              img.addEventListener('error', resolve, { once: true });
+            });
+          })
+        );
+      }
 
-      /* -------------------------------------------------------
-         Génération PDF
-      ------------------------------------------------------- */
+      function validatePages() {
+        let valid = true;
+        pages.forEach(function(page, index) {
+          const content = page.querySelector('.page-content');
+          if (content) {
+            const availableHeight = page.clientHeight -
+              parseFloat(getComputedStyle(page).paddingTop) -
+              parseFloat(getComputedStyle(page).paddingBottom);
+            if (content.scrollHeight > availableHeight + 2) {
+              console.error('La page ' + (index + 1) + ' dépasse de ' +
+                (content.scrollHeight - availableHeight) + 'px.');
+              valid = false;
+            }
+          }
+        });
+        return valid;
+      }
 
       async function generatePDF() {
-
-        const originalHTML =
-          button.innerHTML;
-
+        const originalHTML = button.innerHTML;
 
         try {
-
           button.disabled = true;
-
-          button.innerHTML =
-            '<i class="fas fa-spinner fa-spin"></i>' +
-            '<span>Génération du PDF...</span>';
-
-
-          /*
-            Attendre que toutes les images soient disponibles.
-          */
+          button.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i><span>Génération du PDF...</span>';
+          if (statusEl) statusEl.textContent = 'Génération du PDF en cours...';
 
           await waitForImages();
 
+          document.body.classList.add('pdf-mode');
 
-          /*
-            Attendre le rendu du navigateur.
-          */
-
-          await new Promise(function (resolve) {
-
-            requestAnimationFrame(function () {
-
+          await new Promise(function(resolve) {
+            requestAnimationFrame(function() {
               requestAnimationFrame(resolve);
-
             });
-
           });
 
-
-          /*
-            Vérification des bibliothèques.
-          */
-
-          if (
-            typeof html2canvas === "undefined" ||
-            typeof window.jspdf === "undefined"
-          ) {
-
-            throw new Error(
-              "Les bibliothèques PDF ne sont pas disponibles."
-            );
-
+          if (!validatePages()) {
+            throw new Error('Le contenu de certaines pages dépasse la zone disponible.');
           }
 
+          if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
+            throw new Error('Les bibliothèques PDF ne sont pas disponibles.');
+          }
 
-          const {
-            jsPDF
-          } = window.jspdf;
-
-
-          /*
-            Création du PDF A4.
-          */
-
-          const pdf =
-            new jsPDF({
-
-              orientation: "portrait",
-
-              unit: "mm",
-
-              format: "a4",
-
-              compress: true
-
-            });
-
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4',
+            compress: true
+          });
 
           const pageWidth = 210;
           const pageHeight = 297;
 
+          for (let i = 0; i < pages.length; i++) {
+            const page = pages[i];
 
-          /*
-            Générer chaque page séparément.
+            const canvas = await html2canvas(page, {
+              scale: 2.5,
+              useCORS: true,
+              allowTaint: false,
+              backgroundColor: '#ffffff',
+              logging: false,
+              imageTimeout: 20000,
+              foreignObjectRendering: false
+            });
 
-            Cela évite les problèmes de pagination
-            de html2pdf.js.
-          */
-
-          for (
-            let i = 0;
-            i < pages.length;
-            i++
-          ) {
-
-            const page =
-              pages[i];
-
-
-            /*
-              Capture haute résolution.
-            */
-
-            const canvas =
-              await html2canvas(
-                page,
-                {
-
-                  scale: 2.5,
-
-                  useCORS: true,
-
-                  allowTaint: false,
-
-                  backgroundColor: "#ffffff",
-
-                  logging: false,
-
-                  imageTimeout: 20000,
-
-                  foreignObjectRendering: false
-
-                }
-              );
-
-
-            /*
-              Convertir le canvas en image JPEG.
-            */
-
-            const imageData =
-              canvas.toDataURL(
-                "image/jpeg",
-                0.97
-              );
-
-
-            /*
-              Nouvelle page sauf pour la première.
-            */
+            const imageData = canvas.toDataURL('image/jpeg', 0.97);
 
             if (i > 0) {
-
               pdf.addPage();
-
             }
 
-
-            /*
-              Image exactement au format A4.
-            */
-
-            pdf.addImage(
-              imageData,
-              "JPEG",
-              0,
-              0,
-              pageWidth,
-              pageHeight,
-              undefined,
-              "FAST"
-            );
-
+            pdf.addImage(imageData, 'JPEG', 0, 0, pageWidth, pageHeight, undefined, 'FAST');
           }
 
+          pdf.save('Guide_ITM_TERIAK.pdf');
 
-          /*
-            Télécharger automatiquement.
-          */
-
-          pdf.save(
-            "Guide_ITM_TERIAK.pdf"
-          );
-
+          if (statusEl) statusEl.textContent = 'PDF généré avec succès !';
 
         } catch (error) {
-
-          console.error(
-            "Erreur PDF :",
-            error
-          );
-
-
+          console.error('Erreur PDF :', error);
+          if (statusEl) statusEl.textContent = 'Erreur : ' + error.message;
           alert(
-            "Impossible de générer le PDF.\n\n" +
-            "Vérifiez que les fichiers logo.png, " +
-            "1.png, 2.png, 3.png et 4.png sont accessibles " +
-            "depuis la page."
+            'Impossible de générer le PDF.\n\n' +
+            'Vérifiez que les fichiers logo.png, 1.png, 2.png, 3.png et 4.png sont accessibles.\n' +
+            'Détail : ' + error.message
           );
-
-
         } finally {
-
+          document.body.classList.remove('pdf-mode');
           button.disabled = false;
-
-          button.innerHTML =
-            originalHTML;
-
+          button.innerHTML = originalHTML;
         }
-
       }
 
+      button.addEventListener('click', generatePDF);
 
-      /* -------------------------------------------------------
-         CLICK
-      ------------------------------------------------------- */
-
-      button.addEventListener(
-        "click",
-        generatePDF
-      );
-
+      button.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          generatePDF();
+        }
+      });
 
     })();
-
   </script>
 
 </body>
