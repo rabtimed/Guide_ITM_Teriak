@@ -4,10 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Guide ITM - Teriak</title>
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <!-- html2pdf pour générer le PDF directement -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <style>
     /* --- Styles généraux (écran) --- */
     * {
@@ -25,17 +22,21 @@
       align-items: center;
     }
 
-    /* Conteneur du PDF (masqué à l'écran, utilisé uniquement pour la génération) */
+    /* --- Conteneur du PDF (visible à l'écran pour prévisualisation) --- */
     #pdf-content {
-      display: none; /* Caché à l'écran, on le rend visible pour l'impression via html2pdf */
+      max-width: 1000px;
+      width: 100%;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px -8px rgba(0,0,0,0.15);
+      padding: 30px 35px;
+      margin-bottom: 30px;
     }
 
-    /* Style pour chaque page (identique au design précédent) */
+    /* Style des pages (identique pour écran et impression) */
     .page {
-      width: 210mm;
-      min-height: 297mm;
       background: white;
-      padding: 15mm 12mm;
+      padding: 0;
       margin: 0 auto;
       position: relative;
       box-sizing: border-box;
@@ -43,9 +44,10 @@
       line-height: 1.4;
       color: #1a2a4a;
     }
-
     .page + .page {
-      page-break-before: always;
+      margin-top: 35px;
+      padding-top: 35px;
+      border-top: 2px dashed #ccc;
     }
 
     /* En-tête commun */
@@ -114,6 +116,7 @@
     .footer-pdf .left, .footer-pdf .right {
       flex: 1;
       line-height: 1.5;
+      min-width: 140px;
     }
     .footer-pdf .left strong, .footer-pdf .right strong {
       color: #0a2540;
@@ -321,7 +324,7 @@
     .screenshot-box img {
       max-width: 90%;
       height: auto;
-      max-height: 180px;
+      max-height: 200px;
       object-fit: contain;
       border-radius: 6px;
       border: 1px solid #d0dae8;
@@ -411,10 +414,115 @@
     .download-btn i {
       font-size: 24px;
     }
-    /* Masquer le bouton pendant la génération du PDF */
-    .generating {
-      opacity: 0.5;
-      pointer-events: none;
+
+    /* ========================================================== */
+    /* ========== IMPRESSION ==================================== */
+    /* ========================================================== */
+
+    @page {
+      size: A4 portrait;
+      margin: 10mm;
+    }
+
+    @media print {
+      body {
+        background: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      #pdf-content {
+        max-width: 100% !important;
+        width: 100% !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: white !important;
+      }
+
+      .page {
+        padding: 12mm 10mm !important;
+        margin: 0 !important;
+        border: none !important;
+        page-break-after: always !important;
+        break-after: page !important;
+      }
+      .page:last-child {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+      }
+
+      .page + .page {
+        margin-top: 0 !important;
+        padding-top: 12mm !important;
+        border-top: none !important;
+      }
+
+      /* Cacher le bouton */
+      .download-btn-wrapper {
+        display: none !important;
+      }
+
+      /* Ajustements pour l'impression */
+      .screenshot-box img {
+        max-height: 150px !important;
+      }
+      .reminder-box p, .reminder-box li {
+        font-size: 9.5px !important;
+      }
+      .step-content p, .step-content li {
+        font-size: 9.5px !important;
+      }
+      .card-option div {
+        font-size: 9px !important;
+      }
+      .footer-pdf {
+        font-size: 8px !important;
+      }
+      .footer-pdf .center {
+        font-size: 8px !important;
+      }
+      .btn-header-pdf {
+        font-size: 11px !important;
+        padding: 6px 16px !important;
+      }
+    }
+
+    /* --- Responsive écran --- */
+    @media (max-width: 700px) {
+      #pdf-content {
+        padding: 15px;
+      }
+      .header-pdf {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .header-pdf .logo img {
+        max-height: 40px;
+      }
+      .header-pdf .title-group h1 {
+        font-size: 16px;
+      }
+      .step {
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px;
+      }
+      .comparison-table {
+        grid-template-columns: 1fr;
+      }
+      .footer-pdf {
+        flex-direction: column;
+        text-align: center;
+      }
+      .footer-pdf .left, .footer-pdf .right {
+        text-align: center;
+      }
+      .btn-header-pdf {
+        font-size: 11px;
+        padding: 6px 14px;
+      }
     }
   </style>
 </head>
@@ -422,12 +530,12 @@
 
   <!-- ===== BOUTON DE TÉLÉCHARGEMENT ===== -->
   <div class="download-btn-wrapper">
-    <button id="downloadBtn" class="download-btn">
+    <button id="printBtn" class="download-btn">
       <i class="fas fa-file-pdf"></i> Télécharger le guide (PDF)
     </button>
   </div>
 
-  <!-- ===== CONTENU DU PDF (caché à l'écran) ===== -->
+  <!-- ===== CONTENU DU GUIDE ===== -->
   <div id="pdf-content">
 
     <!-- ========================== PAGE 1 ========================== -->
@@ -531,7 +639,7 @@
 
     <!-- ========================== PAGE 2 ========================== -->
     <div class="page">
-      <!-- EN-TÊTE (identique) -->
+      <!-- EN-TÊTE -->
       <div class="header-pdf">
         <div class="logo">
           <img src="logo.png" alt="Logo TERIAK" />
@@ -611,7 +719,7 @@
         </div>
       </div>
 
-      <!-- PIED DE PAGE (identique) -->
+      <!-- PIED DE PAGE -->
       <div class="footer-pdf">
         <div class="left">
           <strong><i class="fas fa-user-tie"></i> Walid Ben Youssef</strong><br />
@@ -638,17 +746,16 @@
     </div>
   </div>
 
-  <!-- ===== SCRIPT DE TÉLÉCHARGEMENT DIRECT ===== -->
+  <!-- ===== SCRIPT : Impression avec attente des images ===== -->
   <script>
     (function() {
       'use strict';
 
-      const downloadBtn = document.getElementById('downloadBtn');
-      const pdfContent = document.getElementById('pdf-content');
+      const printBtn = document.getElementById('printBtn');
 
-      // Fonction pour vérifier que toutes les images sont chargées
-      function areImagesLoaded(element) {
-        const imgs = element.querySelectorAll('img');
+      // Vérifie que toutes les images sont chargées
+      function imagesLoaded() {
+        const imgs = document.querySelectorAll('#pdf-content img');
         for (let img of imgs) {
           if (!img.complete || img.naturalHeight === 0) {
             return false;
@@ -657,76 +764,34 @@
         return true;
       }
 
-      // Attendre que toutes les images soient chargées puis générer le PDF
-      function generatePDF() {
-        // Désactiver le bouton pendant la génération
-        downloadBtn.classList.add('generating');
-        downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Génération en cours...';
-
-        // Afficher temporairement le contenu PDF pour le capture
-        pdfContent.style.display = 'block';
-
-        // Vérifier le chargement des images
-        const checkImages = setInterval(() => {
-          if (areImagesLoaded(pdfContent)) {
-            clearInterval(checkImages);
-            // Délai supplémentaire pour stabiliser le rendu
-            setTimeout(() => {
-              // Options html2pdf : format A4, marges, etc.
-              const opt = {
-                margin:        [0, 0, 0, 0], // géré par les paddings des pages
-                filename:      'Guide_ITM_Teriak.pdf',
-                image:         { type: 'jpeg', quality: 0.98 },
-                html2canvas:   { scale: 2, useCORS: true, letterRendering: true },
-                jsPDF:         { unit: 'mm', format: 'a4', orientation: 'portrait' }
-              };
-
-              // Générer et télécharger
-              html2pdf().set(opt).from(pdfContent).save().then(() => {
-                // Réinitialiser l'affichage
-                pdfContent.style.display = 'none';
-                downloadBtn.classList.remove('generating');
-                downloadBtn.innerHTML = '<i class="fas fa-file-pdf"></i> Télécharger le guide (PDF)';
-              }).catch(err => {
-                console.error('Erreur PDF :', err);
-                pdfContent.style.display = 'none';
-                downloadBtn.classList.remove('generating');
-                downloadBtn.innerHTML = '<i class="fas fa-file-pdf"></i> Télécharger le guide (PDF)';
-                alert('Une erreur est survenue lors de la génération du PDF. Veuillez réessayer.');
-              });
-            }, 500);
-          }
-        }, 200);
-
-        // Sécurité : après 10 secondes, forcer la génération même si certaines images manquent
-        setTimeout(() => {
-          clearInterval(checkImages);
-          if (pdfContent.style.display === 'block') {
-            // On lance quand même
-            const opt = {
-              margin:        [0, 0, 0, 0],
-              filename:      'Guide_ITM_Teriak.pdf',
-              image:         { type: 'jpeg', quality: 0.98 },
-              html2canvas:   { scale: 2, useCORS: true, letterRendering: true },
-              jsPDF:         { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(pdfContent).save().then(() => {
-              pdfContent.style.display = 'none';
-              downloadBtn.classList.remove('generating');
-              downloadBtn.innerHTML = '<i class="fas fa-file-pdf"></i> Télécharger le guide (PDF)';
-            }).catch(err => {
-              console.error('Erreur PDF :', err);
-              pdfContent.style.display = 'none';
-              downloadBtn.classList.remove('generating');
-              downloadBtn.innerHTML = '<i class="fas fa-file-pdf"></i> Télécharger le guide (PDF)';
-              alert('Erreur de génération. Veuillez réessayer.');
-            });
-          }
-        }, 10000);
+      // Fonction d'impression
+      function printGuide() {
+        if (!imagesLoaded()) {
+          // Attendre le chargement des images
+          const interval = setInterval(() => {
+            if (imagesLoaded()) {
+              clearInterval(interval);
+              setTimeout(() => {
+                window.print();
+              }, 300);
+            }
+          }, 200);
+          // Fallback : après 8 secondes, on imprime quand même
+          setTimeout(() => {
+            clearInterval(interval);
+            window.print();
+          }, 8000);
+        } else {
+          window.print();
+        }
       }
 
-      // Événement du bouton
-      downloadBtn.addEventListener('click', generatePDF);
+      printBtn.addEventListener('click', printGuide);
+
+      // Cacher les badges de chargement (il n'y en a pas ici, mais au cas où)
+      document.addEventListener('DOMContentLoaded', function() {
+        // Rien de spécial à faire
+      });
 
     })();
   </script>
