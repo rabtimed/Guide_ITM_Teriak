@@ -22,7 +22,6 @@
       align-items: center;
     }
 
-    /* --- Conteneur du PDF (visible à l'écran pour prévisualisation) --- */
     #pdf-content {
       max-width: 1000px;
       width: 100%;
@@ -33,34 +32,33 @@
       margin-bottom: 30px;
     }
 
-    /* Style des pages (identique pour écran et impression) */
     .page {
       background: white;
       padding: 0;
       margin: 0 auto;
       position: relative;
       box-sizing: border-box;
-      font-size: 11px;
-      line-height: 1.4;
+      font-size: 10.5px;
+      line-height: 1.35;
       color: #1a2a4a;
     }
     .page + .page {
-      margin-top: 35px;
-      padding-top: 35px;
+      margin-top: 30px;
+      padding-top: 30px;
       border-top: 2px dashed #ccc;
     }
 
-    /* En-tête commun */
+    /* --- En-tête (commun) --- */
     .header-pdf {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 12px;
       border-bottom: 3px solid #0a2540;
-      padding-bottom: 10px;
-      margin-bottom: 15px;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
     }
     .header-pdf .logo img {
-      max-height: 50px;
+      max-height: 44px;
       width: auto;
       display: block;
     }
@@ -68,16 +66,16 @@
       flex: 1;
     }
     .header-pdf .title-group h1 {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
       color: #0a2540;
     }
     .header-pdf .title-group h1 i {
       color: #00a8ff;
-      margin-right: 6px;
+      margin-right: 5px;
     }
     .header-pdf .title-group .subtitle {
-      font-size: 11px;
+      font-size: 10px;
       color: #5a6d7e;
       font-weight: 500;
     }
@@ -87,9 +85,9 @@
     .btn-header-pdf {
       background: #0a2540;
       color: white;
-      padding: 10px 22px;
+      padding: 8px 18px;
       border-radius: 100px;
-      font-size: 13px;
+      font-size: 11.5px;
       font-weight: 600;
       text-decoration: none;
       display: inline-block;
@@ -97,81 +95,81 @@
       white-space: nowrap;
     }
     .btn-header-pdf i {
-      margin-right: 6px;
+      margin-right: 5px;
     }
 
-    /* Pied de page commun */
+    /* --- Pied de page (commun) --- */
     .footer-pdf {
-      margin-top: 20px;
-      padding-top: 12px;
+      margin-top: 14px;
+      padding-top: 10px;
       border-top: 2px solid #e2e8f0;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
-      font-size: 9px;
+      gap: 8px;
+      font-size: 8.2px;
       color: #3a5068;
     }
     .footer-pdf .left, .footer-pdf .right {
       flex: 1;
-      line-height: 1.5;
-      min-width: 140px;
+      line-height: 1.4;
+      min-width: 120px;
     }
     .footer-pdf .left strong, .footer-pdf .right strong {
       color: #0a2540;
     }
     .footer-pdf .left i, .footer-pdf .right i {
       color: #00a8ff;
-      width: 16px;
+      width: 14px;
       text-align: center;
-      margin-right: 4px;
+      margin-right: 3px;
     }
     .footer-pdf .center {
       text-align: center;
       flex: 1.5;
-      font-size: 9px;
+      font-size: 8px;
       color: #6a7f96;
     }
     .footer-pdf .center img {
-      max-height: 30px;
+      max-height: 26px;
       width: auto;
       display: block;
-      margin: 0 auto 4px;
+      margin: 0 auto 3px;
     }
 
-    /* Contenu des pages : rappel, étapes, etc. */
+    /* --- Rappel --- */
     .reminder-box {
       background: #f0f6ff;
-      border-radius: 12px;
-      padding: 14px 18px;
-      margin-bottom: 18px;
-      border-left: 5px solid #0a2540;
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      border-left: 4px solid #0a2540;
     }
     .reminder-box h2 {
-      font-size: 15px;
+      font-size: 13.5px;
       color: #0a2540;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .reminder-box h2 i {
       color: #00a8ff;
-      margin-right: 6px;
+      margin-right: 5px;
     }
     .reminder-box p {
-      font-size: 10.5px;
-      line-height: 1.5;
-      margin-bottom: 4px;
+      font-size: 9.8px;
+      line-height: 1.4;
+      margin-bottom: 3px;
     }
     .reminder-box ul {
-      padding-left: 18px;
-      margin: 4px 0;
+      padding-left: 16px;
+      margin: 3px 0;
     }
     .reminder-box ul li {
-      font-size: 10px;
-      line-height: 1.5;
+      font-size: 9.5px;
+      line-height: 1.4;
       list-style: none;
       position: relative;
-      padding-left: 18px;
+      padding-left: 16px;
     }
     .reminder-box ul li::before {
       content: '•';
@@ -184,61 +182,62 @@
       display: inline-block;
       background: #0a2540;
       color: white;
-      padding: 1px 12px;
+      padding: 1px 10px;
       border-radius: 30px;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
     }
 
+    /* --- Étapes --- */
     .step {
       display: flex;
-      gap: 16px;
-      margin-bottom: 18px;
+      gap: 14px;
+      margin-bottom: 14px;
       background: #fafcff;
-      border-radius: 14px;
-      padding: 14px 18px;
+      border-radius: 12px;
+      padding: 10px 14px;
       border: 1px solid #e9edf4;
     }
     .step-number {
       flex-shrink: 0;
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       background: linear-gradient(135deg, #0a2540, #1a3a5a);
       color: white;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 14px;
-      box-shadow: 0 4px 8px -2px rgba(10,37,64,0.2);
+      border-radius: 12px;
+      box-shadow: 0 3px 6px -2px rgba(10,37,64,0.2);
     }
     .step-content {
       flex: 1;
       min-width: 0;
     }
     .step-content h3 {
-      font-size: 14px;
+      font-size: 12.5px;
       color: #0a2540;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
     .step-content h3 i {
       color: #00a8ff;
-      margin-right: 6px;
+      margin-right: 5px;
     }
     .step-content p, .step-content li {
-      font-size: 10.5px;
-      line-height: 1.5;
+      font-size: 9.8px;
+      line-height: 1.4;
       color: #2d4054;
     }
     .step-content ul {
-      padding-left: 16px;
-      margin: 3px 0;
+      padding-left: 14px;
+      margin: 2px 0;
     }
     .step-content ul li {
       list-style: none;
       position: relative;
-      padding-left: 16px;
+      padding-left: 14px;
     }
     .step-content ul li::before {
       content: '▸';
@@ -249,10 +248,10 @@
     }
     .url-highlight {
       background: #eef2f6;
-      padding: 1px 10px;
+      padding: 1px 8px;
       border-radius: 30px;
       font-family: 'Courier New', monospace;
-      font-size: 10px;
+      font-size: 9px;
       color: #0a2540;
       border: 1px dashed #b0c4de;
       word-break: break-all;
@@ -261,19 +260,19 @@
     }
     .url-highlight i {
       color: #00a8ff;
-      margin-right: 4px;
+      margin-right: 3px;
     }
 
     .comparison-table {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin: 8px 0 10px 0;
+      gap: 8px;
+      margin: 6px 0 8px 0;
     }
     .card-option {
       background: white;
-      border-radius: 10px;
-      padding: 10px 12px;
+      border-radius: 8px;
+      padding: 8px 10px;
       border: 2px solid #e2e8f0;
     }
     .card-option.blue {
@@ -286,23 +285,23 @@
     }
     .card-option .tag {
       font-weight: 700;
-      font-size: 11px;
+      font-size: 10px;
     }
     .card-option.blue .tag { color: #0077be; }
     .card-option.orange .tag { color: #b45f06; }
-    .card-option .tag i { margin-right: 4px; }
+    .card-option .tag i { margin-right: 3px; }
     .card-option div {
-      font-size: 10px;
+      font-size: 9px;
       color: #2d4054;
       margin: 2px 0;
     }
     .badge {
       display: inline-block;
-      padding: 1px 10px;
+      padding: 1px 8px;
       border-radius: 100px;
-      font-size: 8px;
+      font-size: 7.5px;
       font-weight: 600;
-      margin-top: 4px;
+      margin-top: 3px;
     }
     .badge.green {
       background: #d4edda;
@@ -313,72 +312,73 @@
       color: #721c24;
     }
 
+    /* --- Images --- */
     .screenshot-box {
-      margin-top: 8px;
+      margin-top: 6px;
       background: #f0f4fa;
-      border-radius: 10px;
-      padding: 8px;
+      border-radius: 8px;
+      padding: 6px;
       border: 1px solid #dce3ed;
       text-align: center;
     }
     .screenshot-box img {
-      max-width: 90%;
+      max-width: 85%;
       height: auto;
-      max-height: 200px;
+      max-height: 160px;
       object-fit: contain;
-      border-radius: 6px;
+      border-radius: 5px;
       border: 1px solid #d0dae8;
       display: block;
       margin: 0 auto;
     }
     .screenshot-box .caption {
-      font-size: 9px;
+      font-size: 8px;
       color: #6a7f96;
-      margin-top: 4px;
+      margin-top: 3px;
       font-weight: 500;
     }
 
     .alert-box {
       background: #fff8e5;
-      border-left: 5px solid #f1c40f;
-      padding: 12px 16px;
-      border-radius: 10px;
-      margin: 16px 0 12px 0;
+      border-left: 4px solid #f1c40f;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin: 12px 0 10px 0;
     }
     .alert-box h4 {
       color: #8a6d00;
-      font-size: 13px;
-      margin-bottom: 4px;
+      font-size: 11.5px;
+      margin-bottom: 2px;
     }
     .alert-box h4 i {
       color: #f1c40f;
-      margin-right: 6px;
+      margin-right: 5px;
     }
     .alert-box p {
-      font-size: 10.5px;
+      font-size: 9.8px;
       color: #5a4a1a;
     }
 
     .phone-box {
       background: #f0f4fa;
-      border-radius: 10px;
-      padding: 12px 16px;
+      border-radius: 8px;
+      padding: 8px 12px;
       border: 1px solid #d0dae8;
-      margin: 12px 0 0 0;
+      margin: 10px 0 0 0;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
     .phone-box i {
-      font-size: 22px;
+      font-size: 18px;
       color: #0a2540;
     }
     .phone-box strong {
-      font-size: 11px;
+      font-size: 10px;
       color: #0a2540;
     }
     .phone-box span {
-      font-size: 10px;
+      font-size: 9px;
       color: #3a5068;
     }
 
@@ -421,7 +421,7 @@
 
     @page {
       size: A4 portrait;
-      margin: 10mm;
+      margin: 8mm; /* marges plus serrées */
     }
 
     @media print {
@@ -442,7 +442,7 @@
       }
 
       .page {
-        padding: 12mm 10mm !important;
+        padding: 8mm 8mm !important;
         margin: 0 !important;
         border: none !important;
         page-break-after: always !important;
@@ -455,7 +455,7 @@
 
       .page + .page {
         margin-top: 0 !important;
-        padding-top: 12mm !important;
+        padding-top: 8mm !important;
         border-top: none !important;
       }
 
@@ -464,28 +464,113 @@
         display: none !important;
       }
 
-      /* Ajustements pour l'impression */
+      /* --- Ajustements pour tout faire tenir sur 2 pages --- */
       .screenshot-box img {
-        max-height: 150px !important;
+        max-height: 120px !important;
+      }
+      .reminder-box {
+        padding: 8px 12px !important;
+        margin-bottom: 10px !important;
       }
       .reminder-box p, .reminder-box li {
-        font-size: 9.5px !important;
+        font-size: 8.8px !important;
+      }
+      .reminder-box h2 {
+        font-size: 12px !important;
+      }
+      .step {
+        padding: 6px 10px !important;
+        margin-bottom: 10px !important;
+        gap: 10px !important;
+      }
+      .step-content h3 {
+        font-size: 11px !important;
       }
       .step-content p, .step-content li {
-        font-size: 9.5px !important;
+        font-size: 8.8px !important;
+      }
+      .step-number {
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 14px !important;
+      }
+      .comparison-table {
+        gap: 6px !important;
+        margin: 4px 0 6px 0 !important;
+      }
+      .card-option {
+        padding: 4px 6px !important;
+      }
+      .card-option .tag {
+        font-size: 8.5px !important;
       }
       .card-option div {
+        font-size: 8px !important;
+      }
+      .badge {
+        font-size: 6px !important;
+        padding: 1px 5px !important;
+      }
+      .alert-box {
+        padding: 6px 10px !important;
+        margin: 8px 0 6px 0 !important;
+      }
+      .alert-box h4 {
+        font-size: 10px !important;
+      }
+      .alert-box p {
+        font-size: 8.8px !important;
+      }
+      .phone-box {
+        padding: 6px 10px !important;
+        margin: 6px 0 0 0 !important;
+      }
+      .phone-box strong {
         font-size: 9px !important;
       }
-      .footer-pdf {
+      .phone-box span {
+        font-size: 8.5px !important;
+      }
+      .phone-box i {
+        font-size: 16px !important;
+      }
+      .url-highlight {
         font-size: 8px !important;
+        padding: 1px 6px !important;
+      }
+      .footer-pdf {
+        font-size: 7.5px !important;
+        margin-top: 10px !important;
+        padding-top: 8px !important;
+        gap: 5px !important;
       }
       .footer-pdf .center {
-        font-size: 8px !important;
+        font-size: 7px !important;
+      }
+      .footer-pdf .center img {
+        max-height: 22px !important;
+      }
+      .footer-pdf .left, .footer-pdf .right {
+        font-size: 7px !important;
+        min-width: 100px !important;
       }
       .btn-header-pdf {
-        font-size: 11px !important;
-        padding: 6px 16px !important;
+        font-size: 9px !important;
+        padding: 4px 12px !important;
+      }
+      .header-pdf {
+        gap: 10px !important;
+        padding-bottom: 6px !important;
+        margin-bottom: 10px !important;
+      }
+      .header-pdf .logo img {
+        max-height: 36px !important;
+      }
+      .header-pdf .title-group h1 {
+        font-size: 14px !important;
+      }
+      .header-pdf .title-group .subtitle {
+        font-size: 9px !important;
       }
     }
 
@@ -496,18 +581,18 @@
       }
       .header-pdf {
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 8px;
       }
       .header-pdf .logo img {
-        max-height: 40px;
+        max-height: 36px;
       }
       .header-pdf .title-group h1 {
-        font-size: 16px;
+        font-size: 15px;
       }
       .step {
         flex-direction: column;
-        gap: 10px;
-        padding: 12px;
+        gap: 8px;
+        padding: 10px;
       }
       .comparison-table {
         grid-template-columns: 1fr;
@@ -520,8 +605,8 @@
         text-align: center;
       }
       .btn-header-pdf {
-        font-size: 11px;
-        padding: 6px 14px;
+        font-size: 10px;
+        padding: 5px 12px;
       }
     }
   </style>
@@ -566,14 +651,14 @@
           <span class="date-highlight"><i class="fas fa-calendar-alt"></i> À compter du <strong>mercredi 09/09/2026</strong></span>
           &nbsp; toute demande d'assistance informatique devra obligatoirement faire l'objet d'un ticket dans <strong>ITM</strong>.
         </p>
-        <p style="margin-top:4px;"><strong>Pourquoi utiliser ITM ?</strong></p>
+        <p style="margin-top:3px;"><strong>Pourquoi utiliser ITM ?</strong></p>
         <ul>
           <li><strong>Traçabilité</strong> : chaque demande et chaque intervention sont enregistrées et suivies.</li>
           <li><strong>Priorisation</strong> : les tickets permettent d'identifier les demandes urgentes.</li>
           <li><strong>Suivi des interventions</strong> : l'historique conserve une vision claire des actions réalisées.</li>
           <li><strong>Gestion des ressources</strong> : évaluation de la charge de travail et adaptation des ressources.</li>
         </ul>
-        <p style="margin-top:4px;">
+        <p style="margin-top:3px;">
           <i class="fas fa-arrow-right" style="color:#00a8ff;"></i>
           <strong>Comment faire ?</strong> Créez un ticket directement dans ITM. Une procédure détaillée vous est proposée ci-dessous.
         </p>
@@ -620,11 +705,9 @@
           <i class="fas fa-phone"></i> Poste 266 – <i class="fas fa-mobile-alt"></i> +216 92 291 953
         </div>
         <div class="center">
-          <img src="logo.png" alt="TERIAK" style="max-height:30px;" />
-          <div style="font-size:8.5px; color:#6a7f96; margin-top:2px;">
-            Laboratoires TERIAK SA – 1111, ZI Jbel Ouest Zaghouan
-          </div>
-          <div style="font-weight:600; color:#0a2540; margin-top:3px;">
+          <img src="logo.png" alt="TERIAK" />
+          <div>Laboratoires TERIAK SA – 1111, ZI Jbel Ouest Zaghouan</div>
+          <div style="font-weight:600; color:#0a2540; margin-top:2px;">
             <i class="fas fa-check-circle" style="color:#00a8ff;"></i> Support IT – Merci de votre collaboration
           </div>
         </div>
@@ -713,7 +796,7 @@
         <i class="fas fa-phone-alt"></i>
         <div>
           <strong>📞 Dernier recours : Téléphone</strong>
-          <span style="display:block; color:#3a5068; font-size:10px;">
+          <span style="display:block;">
             En urgence absolue, contactez l'équipe IT. <strong>Un ticket devra être régularisé</strong> après l'appel.
           </span>
         </div>
@@ -728,11 +811,9 @@
           <i class="fas fa-phone"></i> Poste 266 – <i class="fas fa-mobile-alt"></i> +216 92 291 953
         </div>
         <div class="center">
-          <img src="logo.png" alt="TERIAK" style="max-height:30px;" />
-          <div style="font-size:8.5px; color:#6a7f96; margin-top:2px;">
-            Laboratoires TERIAK SA – 1111, ZI Jbel Ouest Zaghouan
-          </div>
-          <div style="font-weight:600; color:#0a2540; margin-top:3px;">
+          <img src="logo.png" alt="TERIAK" />
+          <div>Laboratoires TERIAK SA – 1111, ZI Jbel Ouest Zaghouan</div>
+          <div style="font-weight:600; color:#0a2540; margin-top:2px;">
             <i class="fas fa-check-circle" style="color:#00a8ff;"></i> Support IT – Merci de votre collaboration
           </div>
         </div>
@@ -746,14 +827,12 @@
     </div>
   </div>
 
-  <!-- ===== SCRIPT : Impression avec attente des images ===== -->
+  <!-- ===== SCRIPT ===== -->
   <script>
     (function() {
       'use strict';
-
       const printBtn = document.getElementById('printBtn');
 
-      // Vérifie que toutes les images sont chargées
       function imagesLoaded() {
         const imgs = document.querySelectorAll('#pdf-content img');
         for (let img of imgs) {
@@ -764,19 +843,14 @@
         return true;
       }
 
-      // Fonction d'impression
       function printGuide() {
         if (!imagesLoaded()) {
-          // Attendre le chargement des images
           const interval = setInterval(() => {
             if (imagesLoaded()) {
               clearInterval(interval);
-              setTimeout(() => {
-                window.print();
-              }, 300);
+              setTimeout(window.print, 300);
             }
           }, 200);
-          // Fallback : après 8 secondes, on imprime quand même
           setTimeout(() => {
             clearInterval(interval);
             window.print();
@@ -787,12 +861,6 @@
       }
 
       printBtn.addEventListener('click', printGuide);
-
-      // Cacher les badges de chargement (il n'y en a pas ici, mais au cas où)
-      document.addEventListener('DOMContentLoaded', function() {
-        // Rien de spécial à faire
-      });
-
     })();
   </script>
 
