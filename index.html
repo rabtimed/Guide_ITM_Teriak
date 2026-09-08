@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Guide ITM - Teriak</title>
 
-  <!-- Font Awesome (version stable) -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
   <!-- html2canvas + jsPDF -->
@@ -397,7 +397,7 @@
       display: block;
       width: auto;
       max-width: 95%;
-      max-height: 180px;  /* ← Augmenté de 125px à 180px */
+      max-height: 180px;
       height: auto;
       margin: 0 auto;
       object-fit: contain;
@@ -870,7 +870,7 @@
             Créer un ticket en 4 étapes
           </div>
         </div>
-        <a href="https://e-kilanigroupe.com/TERIAK/E_TERIAK/" target="_blank" rel="noopener noreferrer" class="btn-header-pdf">
+        <a href="https://e-kilanigroupe.com/TERIAK/E_TERIAK/" target="_blank" rel="noopener noreferrer" class="btn-header-pdf" id="btnAccesRapide">
           <i class="fas fa-external-link-alt" aria-hidden="true"></i> Accès rapide
         </a>
       </header>
@@ -991,7 +991,7 @@
             Créer un ticket en 4 étapes
           </div>
         </div>
-        <a href="https://e-kilanigroupe.com/TERIAK/E_TERIAK/" target="_blank" rel="noopener noreferrer" class="btn-header-pdf">
+        <a href="https://e-kilanigroupe.com/TERIAK/E_TERIAK/" target="_blank" rel="noopener noreferrer" class="btn-header-pdf" id="btnAccesRapide2">
           <i class="fas fa-external-link-alt" aria-hidden="true"></i> Accès rapide
         </a>
       </header>
@@ -1107,10 +1107,12 @@
       const pages = document.querySelectorAll('#pdf-content .page');
       const statusEl = document.getElementById('pdfStatus');
 
+      // Vérification du nombre de pages
       if (pages.length !== 2) {
         console.warn('Le guide contient ' + pages.length + ' pages, mais 2 sont attendues.');
       }
 
+      // ---- Attente du chargement des images ----
       function waitForImages() {
         const images = document.querySelectorAll('#pdf-content img');
         return Promise.all(
@@ -1127,6 +1129,7 @@
         );
       }
 
+      // ---- Validation du débordement ----
       function validatePages() {
         let valid = true;
         pages.forEach(function(page, index) {
@@ -1145,6 +1148,7 @@
         return valid;
       }
 
+      // ---- Génération du PDF ----
       async function generatePDF() {
         const originalHTML = button.innerHTML;
 
@@ -1153,20 +1157,25 @@
           button.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i><span>Génération du PDF...</span>';
           if (statusEl) statusEl.textContent = 'Génération du PDF en cours...';
 
+          // 1. Attendre le chargement des images
           await waitForImages();
 
+          // 2. Activer le mode PDF (dimensions A4 strictes)
           document.body.classList.add('pdf-mode');
 
+          // 3. Laisser le navigateur appliquer le style
           await new Promise(function(resolve) {
             requestAnimationFrame(function() {
               requestAnimationFrame(resolve);
             });
           });
 
+          // 4. Valider les pages
           if (!validatePages()) {
-            throw new Error('Le contenu de certaines pages dépasse la zone disponible.');
+            throw new Error('Le contenu de certaines pages dépasse la zone disponible. Vérifiez les tailles.');
           }
 
+          // 5. Vérifier les bibliothèques
           if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
             throw new Error('Les bibliothèques PDF ne sont pas disponibles.');
           }
@@ -1182,9 +1191,11 @@
           const pageWidth = 210;
           const pageHeight = 297;
 
+          // 6. Générer chaque page
           for (let i = 0; i < pages.length; i++) {
             const page = pages[i];
 
+            // Capture avec html2canvas
             const canvas = await html2canvas(page, {
               scale: 2.5,
               useCORS: true,
@@ -1202,8 +1213,21 @@
             }
 
             pdf.addImage(imageData, 'JPEG', 0, 0, pageWidth, pageHeight, undefined, 'FAST');
+
+            // ---- Ajout d'un lien cliquable sur "Accès rapide" ----
+            // Coordonnées approximatives du bouton dans le header
+            // Marge gauche/droite = 11mm, hauteur header = 26mm, bouton à droite
+            // On définit une zone large pour être sûr
+            const linkX = 210 - 11 - 35; // 164mm (bouton ~30mm de large)
+            const linkY = 3; // à 3mm du haut
+            const linkW = 40; // largeur du lien
+            const linkH = 12; // hauteur du lien
+            const url = 'https://e-kilanigroupe.com/TERIAK/E_TERIAK/';
+
+            pdf.link(linkX, linkY, linkW, linkH, { url: url });
           }
 
+          // 7. Télécharger
           pdf.save('Guide_ITM_TERIAK.pdf');
 
           if (statusEl) statusEl.textContent = 'PDF généré avec succès !';
@@ -1214,17 +1238,20 @@
           alert(
             'Impossible de générer le PDF.\n\n' +
             'Vérifiez que les fichiers logo.png, 1.png, 2.png, 3.png et 4.png sont accessibles.\n' +
-            'Détail : ' + error.message
+            'Détail technique : ' + error.message
           );
         } finally {
+          // Restaurer l'état
           document.body.classList.remove('pdf-mode');
           button.disabled = false;
           button.innerHTML = originalHTML;
         }
       }
 
+      // ---- Événement au clic ----
       button.addEventListener('click', generatePDF);
 
+      // ---- Support clavier ----
       button.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
