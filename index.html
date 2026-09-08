@@ -446,7 +446,7 @@
 
     @page {
       size: A4 portrait;
-      margin: 12mm;
+      margin: 10mm; /* marges réduites pour optimiser l'espace */
     }
 
     @media print {
@@ -469,21 +469,20 @@
         overflow: visible !important;
         background: white !important;
         margin: 0 !important;
-        /* Padding ajusté pour ne pas cacher le contenu sous le header/footer */
-        padding: 65px 20px 45px 20px !important;
+        padding: 60px 18px 40px 18px !important; /* légèrement réduit */
       }
       .container::before {
         display: none !important;
       }
 
-      /* Header fixe, mais avec une hauteur raisonnable */
+      /* Header fixe */
       .header-top {
         position: fixed !important;
         top: 0 !important;
         left: 0 !important;
         right: 0 !important;
         background: white !important;
-        padding: 4px 20px !important;
+        padding: 4px 18px !important;
         border-bottom: 2px solid #0a2540 !important;
         z-index: 100 !important;
         display: flex !important;
@@ -491,155 +490,160 @@
         gap: 8px !important;
         overflow: visible !important;
         margin: 0 !important;
-        height: 45px !important;
+        height: 42px !important;
       }
       .header-top .logo img {
-        max-height: 28px !important;
+        max-height: 26px !important;
       }
       .header-top .title-group h1 {
-        font-size: 13px !important;
+        font-size: 12px !important;
       }
       .header-top .title-group .subtitle {
-        font-size: 8.5px !important;
+        font-size: 8px !important;
       }
       .btn-header {
-        font-size: 6.5px !important;
-        padding: 1px 7px !important;
+        font-size: 6px !important;
+        padding: 1px 6px !important;
         border-width: 1px !important;
       }
 
-      /* Footer fixe, hauteur réduite */
+      /* Footer fixe */
       .footer-bottom {
         position: fixed !important;
         bottom: 0 !important;
         left: 0 !important;
         right: 0 !important;
         background: white !important;
-        padding: 3px 20px !important;
+        padding: 3px 18px !important;
         border-top: 1px solid #ccc !important;
         z-index: 100 !important;
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
-        font-size: 7px !important;
+        font-size: 6.5px !important;
         gap: 4px !important;
         overflow: visible !important;
         margin: 0 !important;
-        height: 28px !important;
+        height: 26px !important;
       }
       .footer-bottom .footer-logo img {
-        max-height: 16px !important;
+        max-height: 15px !important;
       }
       .footer-bottom .contact-info {
-        font-size: 6px !important;
+        font-size: 5.5px !important;
         line-height: 1.2 !important;
       }
       .footer-bottom .footer-note {
-        font-size: 5.5px !important;
+        font-size: 5px !important;
       }
 
-      /* Gestion des sauts de page : appliquer break-inside uniquement
-         sur les petits blocs qui doivent rester groupés, mais pas sur
-         les grandes étapes entières pour éviter les pages vides. */
+      /* --- Pagination forcée en 2 pages --- */
+      /* L'étape 3 doit commencer une nouvelle page */
+      .step:nth-of-type(3) {
+        break-before: page !important;
+        page-break-before: always !important;
+      }
+
+      /* Éviter les coupures indésirables */
       .reminder-box,
       .alert-box,
       .phone-box,
       .screenshot-box,
-      .card-option {
+      .card-option,
+      .step {
         break-inside: avoid !important;
         page-break-inside: avoid !important;
         overflow: visible !important;
       }
 
-      /* Pour les étapes, on peut autoriser la coupure si nécessaire,
-         mais on les garde ensemble autant que possible. */
+      /* Réduire les espacements pour tout faire tenir */
       .step {
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-        margin-bottom: 10px !important;
-        padding: 8px 12px !important;
+        margin-bottom: 8px !important;
+        padding: 6px 10px !important;
         border: 1px solid #ccc !important;
         background: #fafafa !important;
       }
 
-      /* Réduction des espacements pour optimiser l'utilisation de l'espace */
       .reminder-box {
-        padding: 6px 12px !important;
-        margin-bottom: 10px !important;
+        padding: 5px 10px !important;
+        margin-bottom: 8px !important;
       }
       .reminder-box h2 {
-        font-size: 11.5px !important;
+        font-size: 11px !important;
       }
       .reminder-box p, .reminder-box li {
-        font-size: 9.5px !important;
+        font-size: 9px !important;
       }
       .reminder-box .date-highlight {
-        font-size: 9px !important;
-        padding: 1px 7px !important;
+        font-size: 8.5px !important;
+        padding: 1px 6px !important;
       }
 
       .alert-box {
-        padding: 8px 12px !important;
-        margin: 10px 0 !important;
+        padding: 6px 10px !important;
+        margin: 8px 0 !important;
       }
       .alert-box p {
-        font-size: 9.5px !important;
+        font-size: 9px !important;
       }
 
       .phone-box {
-        padding: 6px 12px !important;
+        padding: 5px 10px !important;
         margin: 6px 0 !important;
       }
       .phone-box strong {
-        font-size: 9.5px !important;
+        font-size: 9px !important;
       }
       .phone-box span {
-        font-size: 9px !important;
+        font-size: 8.5px !important;
       }
 
       .step-content h3 {
-        font-size: 12px !important;
+        font-size: 11px !important;
       }
       .step-content p, .step-content li {
-        font-size: 9.5px !important;
+        font-size: 9px !important;
       }
 
       .comparison-table {
-        gap: 8px !important;
-        margin: 6px 0 8px 0 !important;
+        gap: 6px !important;
+        margin: 5px 0 6px 0 !important;
       }
       .card-option {
-        padding: 5px 8px !important;
+        padding: 4px 6px !important;
       }
       .card-option .tag {
-        font-size: 9px !important;
-      }
-      .card-option div {
         font-size: 8.5px !important;
       }
+      .card-option div {
+        font-size: 8px !important;
+      }
       .badge {
-        font-size: 6.5px !important;
-        padding: 1px 5px !important;
+        font-size: 6px !important;
+        padding: 1px 4px !important;
       }
 
       .url-highlight {
-        font-size: 8px !important;
-        padding: 1px 5px !important;
+        font-size: 7.5px !important;
+        padding: 1px 4px !important;
       }
 
+      .screenshot-box {
+        padding: 6px !important;
+        margin-top: 6px !important;
+      }
       .screenshot-box img {
-        max-width: 85% !important;
-        max-height: 180px !important; /* taille confortable */
+        max-width: 80% !important;
+        max-height: 150px !important;
         height: auto !important;
         width: auto !important;
         object-fit: contain !important;
         border: 1px solid #aaa !important;
       }
       .screenshot-box .caption {
-        font-size: 7.5px !important;
+        font-size: 7px !important;
       }
 
-      /* Cacher les badges de chargement */
       .loading-badge {
         display: none !important;
       }
@@ -720,7 +724,7 @@
         Afin d'améliorer le suivi, la réactivité et la qualité de notre support informatique, nous vous rappelons que :
       </p>
       <p>
-        <span class="date-highlight"><i class="fas fa-calendar-alt"></i> À compter du <strong>mardi 08/09/2026</strong></span>
+        <span class="date-highlight"><i class="fas fa-calendar-alt"></i> À compter du <strong>mercredi 09/09/2026</strong></span>
         &nbsp; toute demande d'assistance informatique devra obligatoirement faire l'objet d'un ticket dans <strong>ITM</strong>.
       </p>
       <p style="margin-top:6px;"><strong>Pourquoi utiliser ITM ?</strong></p>
@@ -868,7 +872,6 @@
 
       let printing = false;
 
-      // Vérifie que toutes les images sont chargées (via complete + naturalHeight)
       function imagesLoaded() {
         const imgs = document.querySelectorAll('img');
         for (let img of imgs) {
@@ -879,23 +882,19 @@
         return true;
       }
 
-      // Fonction d'impression avec attente des images
       function printGuide() {
         if (printing) return;
         printing = true;
 
-        // Si les images sont déjà chargées, imprimer directement
         if (imagesLoaded()) {
           window.print();
           printing = false;
           return;
         }
 
-        // Sinon, attendre leur chargement avec un intervalle
         const interval = setInterval(() => {
           if (imagesLoaded()) {
             clearInterval(interval);
-            // Petit délai pour stabiliser le rendu
             setTimeout(() => {
               window.print();
               printing = false;
@@ -903,7 +902,6 @@
           }
         }, 200);
 
-        // Fallback : après 5 secondes, forcer l'impression même si une image manque
         setTimeout(() => {
           clearInterval(interval);
           if (printing) {
@@ -913,13 +911,11 @@
         }, 5000);
       }
 
-      // Attacher l'événement au bouton
       const btn = document.getElementById('printButton');
       if (btn) {
         btn.addEventListener('click', printGuide);
       }
 
-      // Dès que le DOM est prêt, cacher les badges si les images sont déjà chargées
       document.addEventListener('DOMContentLoaded', function() {
         const badges = document.querySelectorAll('.loading-badge');
         if (imagesLoaded()) {
