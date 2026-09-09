@@ -1224,7 +1224,7 @@
             const linkH = 12; // hauteur du lien
             const url = 'https://e-kilanigroupe.com/TERIAK/E_TERIAK/';
 
-            pdf.link(linkX, linkY, linkW, linkH, { url: url, target: '_blank' });
+            pdf.link(linkX, linkY, linkW, linkH, { url: 'javascript:window.open("' + url + '")' });
           }
 
           // 7. Télécharger
